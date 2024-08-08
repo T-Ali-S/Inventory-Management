@@ -1,0 +1,201 @@
+Client Side Code:
+
+App.jsx contain below code:
+// import { useState } from "react";
+import React from "react";
+import "./App.css";
+import NavBar from "./components/NavBar";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import About from "./components/About";
+import Home from "./components/Home";
+
+function App() {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <>
+          <NavBar />
+          <Home />
+        </>
+      ),
+    },
+    {
+      path: "/About",
+      element: (
+        <>
+          <NavBar />
+          <About />
+        </>
+      ),
+    },
+  ]);
+
+  return (
+    <>
+      <RouterProvider router={router} />
+    </>
+  );
+}
+
+export default App;
+/////////////////////////// End of App.jsx code
+The Component of Client side include About.jsx, Home.jsx and NavBar,jsx
+The code of NavBar is:
+import React from "react";
+import { Link } from "react-router-dom";
+function NavBar() {
+  return (
+    <>
+      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+        <div className="container-fluid">
+          <Link className="navbar-brand" to="/">
+            Steel House
+          </Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="/navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                <Link className="nav-link active" aria-current="page" to="/">
+                  Home
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/About">
+                  ShowUsers
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </>
+  );
+}
+
+export default NavBar;
+/////////////////////End of Navbar code:
+Home.jsx Code is:
+import { useState } from "react";
+import React from "react";
+
+function Home() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const collectData = async (e) => {
+    e.preventDefault();
+    let result = await fetch("http://localhost:4000/", {
+      method: "post",
+      body: JSON.stringify({ name, email, password }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    result = await result.json;
+    localStorage.setItem("user", JSON.stringify(result));
+  };
+
+  return (
+    <>
+      <div className="container">
+        <form onSubmit={collectData}>
+          <h2 className="text-center pt-3">Sign-up Form</h2>
+          <div className="mb-3">
+            <label className="form-label">Username</label>
+            <input
+              type="text"
+              className="form-label"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Email</label>
+            <input
+              type="email"
+              className="form-label"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              className="form-label"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <button type="submit" className="btn btn-success">
+            Submit
+          </button>
+        </form>
+      </div>
+    </>
+  );
+}
+
+export default Home;
+///////////////////////End of Home.jsx code
+The About.jsx code is:
+import React from "react";
+
+function About() {
+  return <div>This is a About page</div>;
+}
+
+export default About;
+////////////////////////End of About.jsx code
+
+Now for Server Side Code:
+The Index.jsx File Contain COde:
+const express = require("express");
+const app = express();
+app.use(express.json());
+
+const cors = require("cors");
+app.use(cors());
+const dbConnection = require("./db/connection");
+const Users = require("./Models/User");
+
+app.post("/", async (req, res) => {
+  let user = new Users(req.body);
+  let result = await user.save();
+  res.send(result);
+});
+
+app.get("/a", async (req, res) => {
+  let users = await Users.find();
+  res.send(users);
+});
+
+app.listen(4000);
+/////////////////////End of Index.jsx Code
+Inside of Model Folder there's a User.js File That contain the UserSchema, it's code is
+const mongoose = require("mongoose");
+
+const UsersSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  password: String,
+});
+
+module.exports = mongoose.model("Users", UsersSchema);
+/////////////////////////////////End of User.js code
+Code of Connection.js code:
+const mongoose = require("mongoose");
+mongoose.connect("mongodb://127.0.0.1/Users");
+//////////////////////////End of connection.js code:

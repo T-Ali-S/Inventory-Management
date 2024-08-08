@@ -1,0 +1,19 @@
+.container{
+    width:36%;
+    display :flex;
+    margin-top:2.5rem;
+    padding: 0.5rem 3.5rem;
+    border: 0.16rem solid #bebebe;
+}
+
+/* App.css */
+
+.table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .btn {
+    margin-top: 20px;
+  }
+  
