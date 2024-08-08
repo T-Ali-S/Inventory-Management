@@ -1,60 +1,55 @@
 import { useState } from "react";
 import React from "react";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
 function Signup(props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const collectData = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://localhost:4000/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-      const result = await response.text();
 
-      if (result === "Success") {
-        console.log("Email already exist");
+    const result = await axios.post("http://localhost:4000/check-email", {
+      email,
+    });
+    if (result.data === "Email already exists") {
+      props.showAlert("Email already exists", "warning");
+      setEmail("");
+      setPassword("");
+      setName("");
+    } else if (result.data === "Email is available") {
+      const signUpResponse = await axios.post("http://localhost:4000/signup", {
+        name,
+        email,
+        password,
+      });
+      if (signUpResponse.data === "Signup successful") {
+        props.showAlert("SignUp successful", "success");
+        navigate("/Login");
       } else {
-        console.log("Email is available");
+        props.showAlert("Unexpected response from server", "warning");
       }
-    } catch (error) {
-      console.log("Error checking email:", error);
+    } else {
+      props.showAlert("Unexpected response fromthe server", "warning");
     }
   };
 
-  // const collectData = async (e) => {
-  //   e.preventDefault();
-
-  //   let result = await fetch("http://localhost:4000/", {
-  //     method: "post",
-  //     body: JSON.stringify({ name, email, password }),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   });
-  //   result = await result.json;
-  //   localStorage.setItem("user", JSON.stringify(result));
-  // };
-
   return (
     <>
-      <div className="container">
+      <h2 className="text-center  pt-3 mb-5">Sign-up Form</h2>
+      <div className="text-center border-2 m-5">
         <form onSubmit={collectData}>
-          <h2 className="text-center pt-3 mb-5">Sign-up Form</h2>
-          <div className="mb-3">
+          <div className="mb-3 mt-5">
             <input
               type="text"
               className="form-label border-2 border-gray-700 p-2"
               value={name}
               placeholder="UserName"
               onChange={(e) => setName(e.target.value)}
+              required
             />
           </div>
           <div className="mb-3">
@@ -64,6 +59,7 @@ function Signup(props) {
               value={email}
               placeholder="Email Address"
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
           <div className="mb-3">
@@ -73,9 +69,10 @@ function Signup(props) {
               value={password}
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
-          <button type="submit" className="btn btn-success text-center">
+          <button type="submit" className="mb-4 btn btn-success text-center">
             Submit
           </button>
         </form>

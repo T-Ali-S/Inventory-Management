@@ -3,7 +3,9 @@ import React from "react";
 function Home() {
   return (
     <>
-      <h1 className="container text-4xl text-center">DashBoard</h1>
+      <div className="border-2 w-40  mt-5 text-center">
+        <h1 className="">DashBoard</h1>
+      </div>
     </>
   );
 }

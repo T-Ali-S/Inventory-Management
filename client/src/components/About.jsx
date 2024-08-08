@@ -14,32 +14,40 @@ function About() {
   };
 
   return (
-    <div>
-      <h2>About Page</h2>
-      <button onClick={fetchUsers} className="btn btn-primary">
-        Show Users
-      </button>
-      {users.length > 0 && (
-        <table className="table mt-3">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Password</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user, index) => (
-              <tr key={index}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.password}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+    <>
+      <h2 className="text-center text-4xl mt-5">
+        Information About the Users Registered
+      </h2>
+      <div className="border-2 m-5">
+        <div>
+          {users.length > 0 && (
+            <table className="table mt-3">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Password</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user, index) => (
+                  <tr key={index}>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{user.password}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+      <div className="text-center">
+        <button onClick={fetchUsers} className="btn btn-primary ">
+          Show Users
+        </button>
+      </div>
+    </>
   );
 }
 

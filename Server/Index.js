@@ -6,12 +6,13 @@ const cors = require("cors");
 app.use(cors());
 const dbConnection = require("./db/connection");
 const Users = require("./Models/User");
+const User = require("./Models/User");
 
-app.post("/", async (req, res) => {
-  let user = new Users(req.body);
-  let result = await user.save();
-  res.send(result);
-});
+// app.post("/", async (req, res) => {
+//   let user = new Users(req.body);
+//   let result = await user.save();
+//   res.send("Signup successful");
+// });
 
 app.get("/a", async (req, res) => {
   let users = await Users.find();
@@ -31,6 +32,26 @@ app.post("/login", (req, res) => {
       res.json("no record existed");
     }
   });
+});
+app.post("/signup", async (req, res) => {
+  const { name, email, password } = req.body;
+  const newUser = new Users({
+    name,
+    email,
+    password,
+  });
+  await newUser.save();
+  res.send("Signup successful");
+});
+
+app.post("/check-email", async (req, res) => {
+  const { email } = req.body;
+  const user = await Users.findOne({ email });
+  if (user) {
+    res.send("Email already exists");
+  } else {
+    res.send("Email is available");
+  }
 });
 
 app.listen(4000);

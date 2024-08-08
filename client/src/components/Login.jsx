@@ -16,7 +16,7 @@ function Login(props) {
           props.showAlert("Logged In", "success");
           setEmail("");
           setPassword("");
-          navigate("/Signup");
+          navigate("/");
         } else {
           props.showAlert("Login Failed", "warning");
         }
@@ -25,9 +25,9 @@ function Login(props) {
   };
 
   return (
-    <React.Fragment>
+    <>
       <form onSubmit={handleSubmit}>
-        <div className=" text-center">
+        <div className="border-2 m-5 text-center">
           <div className="mt-5">
             <p className="text-2xl font-bold">Login Form</p>
           </div>
@@ -51,19 +51,19 @@ function Login(props) {
               required
             />
           </div>
-          <Link className="text-sm m-5 text-blue-600s" to="/Signup">
-            Create an Account
-          </Link>
+          <div className="mt-3">
+            <Link to="/Signup">Create an Account</Link>
+          </div>
           <br />
           <button
             type="submit" // Ensure the button submits the form
-            className="mt-4 ml-2 bg-green-600 border-2 hover:bg-green-700 text-black p-2"
+            className="mb-3  ml-2 bg-green-600 border-2 hover:bg-green-700 text-black p-2"
           >
             Submit
           </button>
         </div>
       </form>
-    </React.Fragment>
+    </>
   );
 }
 
