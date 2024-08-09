@@ -12,6 +12,10 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Alert from "./components/Alert";
 import Signup from "./components/Signup";
+import Adminlogin from "./components/Adminloginn";
+import AdminSignup from "./components/AdminSignup";
+import AdminHome from "./components/AdminHome";
+import AdminNavbar from "./components/AdminNavbar";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -63,6 +67,36 @@ function App() {
           <NavBar />
           <Alert alert={alert} />
           <Signup showAlert={showAlert} />
+        </>
+      ),
+    },
+    {
+      path: "/Adminlogin",
+      element: (
+        <>
+          <NavBar />
+          <Alert alert={alert} />
+          <Adminlogin showAlert={showAlert} />
+        </>
+      ),
+    },
+    {
+      path: "/AdminSignup",
+      element: (
+        <>
+          <NavBar />
+          <Alert alert={alert} />
+          <AdminSignup showAlert={showAlert} />
+        </>
+      ),
+    },
+    {
+      path: "/AdminHome",
+      element: (
+        <>
+          <AdminNavbar />
+          <Alert alert={alert} />
+          <AdminHome showAlert={showAlert} />
         </>
       ),
     },

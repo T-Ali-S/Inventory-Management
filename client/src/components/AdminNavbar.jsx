@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-function NavBar() {
+
+function AdminNavbar() {
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -26,6 +27,11 @@ function NavBar() {
                   Home
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/About">
+                  ShowUsers
+                </Link>
+              </li>
             </ul>
             <form className="d-flex" role="search">
               <Link className="btn btn-outline-success" to="/Login">
@@ -39,4 +45,4 @@ function NavBar() {
   );
 }
 
-export default NavBar;
+export default AdminNavbar;

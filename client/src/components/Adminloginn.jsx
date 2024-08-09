@@ -2,21 +2,22 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-function Login(props) {
+function Adminlogin(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // const [adminCheck, setAdminCheck] = useState("true");
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:4000/login", { email, password })
+      .post("http://localhost:4000/adminlogin", { email, password })
       .then((result) => {
         if (result.data === "Success") {
           props.showAlert("Logged In", "success");
           setEmail("");
           setPassword("");
-          navigate("/");
+          navigate("/AdminHome");
         } else {
           props.showAlert("Login Failed", "warning");
         }
@@ -29,7 +30,7 @@ function Login(props) {
       <form onSubmit={handleSubmit}>
         <div className="border-2 m-5 text-center">
           <div className="mt-5">
-            <p className="text-2xl font-bold">Login Form</p>
+            <p className="text-2xl font-bold">Admin Login Form</p>
           </div>
           <div className="mt-5">
             <input
@@ -51,11 +52,9 @@ function Login(props) {
               required
             />
           </div>
+
           <div className="mt-3">
-            <Link to="/Signup">Create an Account</Link>
-          </div>
-          <div className="mt-3">
-            <Link to="/Adminlogin">Admin Login</Link>
+            <Link to="/Login">Customer Login</Link>
           </div>
           <br />
           <button
@@ -70,4 +69,4 @@ function Login(props) {
   );
 }
 
-export default Login;
+export default Adminlogin;

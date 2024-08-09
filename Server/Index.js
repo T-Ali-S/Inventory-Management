@@ -33,12 +33,27 @@ app.post("/login", (req, res) => {
     }
   });
 });
+app.post("/adminlogin", (req, res) => {
+  const { email, password } = req.body;
+  Users.findOne({ email: email }).then((user) => {
+    if (user) {
+      if (user.adminCheck === true && user.password === password) {
+        res.json("Success");
+      } else {
+        res.json("the password is incorrect");
+      }
+    } else {
+      res.json("no record existed");
+    }
+  });
+});
 app.post("/signup", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, adminCheck } = req.body;
   const newUser = new Users({
     name,
     email,
     password,
+    adminCheck,
   });
   await newUser.save();
   res.send("Signup successful");

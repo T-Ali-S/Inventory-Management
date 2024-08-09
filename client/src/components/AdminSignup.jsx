@@ -3,11 +3,11 @@ import React from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-function Signup(props) {
+function AdminSignup(props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [adminCheck, setAdminCheck] = useState("false");
+  const [adminCheck, setAdminCheck] = useState("true");
   const navigate = useNavigate();
 
   const collectData = async (e) => {
@@ -30,7 +30,7 @@ function Signup(props) {
       });
       if (signUpResponse.data === "Signup successful") {
         props.showAlert("SignUp successful", "success");
-        navigate("/Login");
+        navigate("/AdminHome");
       } else {
         props.showAlert("Unexpected response from server", "warning");
       }
@@ -41,7 +41,7 @@ function Signup(props) {
 
   return (
     <>
-      <h2 className="text-center  pt-3 mb-5">Sign-up Form</h2>
+      <h2 className="text-center  pt-3 mb-5">Admin Sign-up Form</h2>
       <div className="text-center border-2 m-5">
         <form onSubmit={collectData}>
           <div className="mb-3 mt-5">
@@ -83,4 +83,4 @@ function Signup(props) {
   );
 }
 
-export default Signup;
+export default AdminSignup;
