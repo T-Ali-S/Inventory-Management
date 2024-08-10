@@ -12,13 +12,17 @@ function Login(props) {
     axios
       .post("http://localhost:4000/login", { email, password })
       .then((result) => {
-        if (result.data === "Success") {
+        if (result.data.success) {
           props.showAlert("Logged In", "success");
-          setEmail("");
-          setPassword("");
+          // setEmail("");
+          // setPassword("");
+          props.setIsLoggedIn(true);
+          props.setusername(result.data.username);
+          localStorage.setItem("username", result.data.username);
+          localStorage.setItem("isLoggedIn", true);
           navigate("/");
         } else {
-          props.showAlert("Login Failed", "warning");
+          props.showAlert("Login Failed: " + result.data.message, "warning");
         }
       })
       .catch((err) => console.log(err)); // Fixed typo here
