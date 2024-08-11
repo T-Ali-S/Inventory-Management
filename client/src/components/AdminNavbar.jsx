@@ -1,7 +1,16 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-function AdminNavbar() {
+function AdminNavbar(props) {
+  const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("username");
+    localStorage.removeItem("isLoggedIn");
+    navigate("/");
+    window.location.reload();
+  };
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -34,9 +43,33 @@ function AdminNavbar() {
               </li>
             </ul>
             <form className="d-flex" role="search">
-              <Link className="btn btn-outline-success" to="/Login">
-                Login
-              </Link>
+              {props.isLoggedIn ? (
+                <div className="dropdown">
+                  <button
+                    className="btn btn-outline-success dropdown-toggle"
+                    type="button"
+                    id="dropdownmenuButton"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    {props.username}
+                  </button>
+                  <ul
+                    className="dropdown-menu dropdown-menu-end"
+                    aria-labelledby="dropdownMenuButton"
+                  >
+                    <li>
+                      <button className="dropdown-item" onClick={handleLogout}>
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              ) : (
+                <Link className="btn btn-outline-success" to="/Login">
+                  Login
+                </Link>
+              )}
             </form>
           </div>
         </div>

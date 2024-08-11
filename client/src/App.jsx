@@ -87,7 +87,11 @@ function App() {
         <>
           <NavBar />
           <Alert alert={alert} />
-          <Adminlogin showAlert={showAlert} />
+          <Adminlogin
+            showAlert={showAlert}
+            setIsLoggedIn={setIsLoggedIn}
+            setusername={setusername}
+          />
         </>
       ),
     },
@@ -105,7 +109,7 @@ function App() {
       path: "/AdminHome",
       element: (
         <>
-          <AdminNavbar />
+          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
           <Alert alert={alert} />
           <AdminHome showAlert={showAlert} />
         </>

@@ -38,12 +38,12 @@ app.post("/adminlogin", (req, res) => {
   Users.findOne({ email: email }).then((user) => {
     if (user) {
       if (user.adminCheck === true && user.password === password) {
-        res.json("Success");
+        res.json({ success: true, username: user.name });
       } else {
-        res.json("the password is incorrect");
+        res.json({ success: false, message: "the password is incorrect" });
       }
     } else {
-      res.json("no record existed");
+      res.json({ success: false, message: "no record existed" });
     }
   });
 });
