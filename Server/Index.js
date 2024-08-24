@@ -6,7 +6,7 @@ const cors = require("cors");
 app.use(cors());
 const dbConnection = require("./db/connection");
 const Users = require("./Models/User");
-const User = require("./Models/User");
+const Product = require("./Models/Products");
 
 // app.post("/", async (req, res) => {
 //   let user = new Users(req.body);
@@ -67,6 +67,24 @@ app.post("/check-email", async (req, res) => {
   } else {
     res.send("Email is available");
   }
+});
+app.post("/check-product", async (req, res) => {
+  const { name } = req.body;
+  const products = await Product.findOne({ name });
+  if (products) {
+    res.send("Product name already exists");
+  } else {
+    res.send("Product name is available");
+  }
+});
+
+app.post("/add-product", async (req, res) => {
+  const { name } = req.body;
+  const newProduct = new Product({
+    name,
+  });
+  await newProduct.save();
+  res.send("Signup successful");
 });
 
 app.listen(4000);

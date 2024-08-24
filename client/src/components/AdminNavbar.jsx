@@ -15,7 +15,7 @@ function AdminNavbar(props) {
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
+          <Link className="navbar-brand" to="/AdminHome">
             Steel House
           </Link>
           <button
@@ -32,7 +32,11 @@ function AdminNavbar(props) {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" to="/">
+                <Link
+                  className="nav-link active"
+                  aria-current="page"
+                  to="/AdminHome"
+                >
                   Home
                 </Link>
               </li>
@@ -41,7 +45,27 @@ function AdminNavbar(props) {
                   ShowUsers
                 </Link>
               </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  id="navbarDropdown"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Products
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <Link class="dropdown-item" to="/addProduct">
+                    Add Product
+                  </Link>
+                  <a class="dropdown-item" href="#">
+                    Edit Product
+                  </a>
+                </div>
+              </li>
             </ul>
+
             <form className="d-flex" role="search">
               {props.isLoggedIn ? (
                 <div className="dropdown">
