@@ -3,24 +3,28 @@ import axios from "axios";
 
 function AddProduct(props) {
   const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
 
   const collectData = async (e) => {
     e.preventDefault();
 
     const result = await axios.post("http://localhost:4000/check-product", {
       name,
+      price,
     });
     if (result.data === "Product name already exists") {
       props.showAlert("Product name already exists", "warning");
     } else if (result.data === "Product name is available") {
-      const signUpResponse = await axios.post(
+      const ProductResponse = await axios.post(
         "http://localhost:4000/add-product",
         {
           name,
+          price,
         }
       );
-      if (signUpResponse.data === "Product successful Added") {
+      if (ProductResponse.data === "Product successful Added") {
         props.showAlert("Product successful Added", "success");
+        setName(""), setPrice("");
       } else {
         props.showAlert("Unexpected response from server", "warning");
       }
@@ -41,6 +45,14 @@ function AddProduct(props) {
               value={name}
               placeholder="Enter Product Name"
               onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <input
+              type="number"
+              className="form-label border-2 m-1 border-gray-700 p-2"
+              value={price}
+              placeholder="Enter Price"
+              onChange={(e) => setPrice(e.target.value)}
               required
             />
           </div>

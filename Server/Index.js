@@ -18,6 +18,10 @@ app.get("/a", async (req, res) => {
   let users = await Users.find();
   res.send(users);
 });
+app.get("/getProduct", async (req, res) => {
+  let products = await Product.find();
+  res.send(products);
+});
 
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
@@ -79,12 +83,14 @@ app.post("/check-product", async (req, res) => {
 });
 
 app.post("/add-product", async (req, res) => {
-  const { name } = req.body;
+  const { name, price } = req.body;
   const newProduct = new Product({
     name,
+    price,
   });
+
   await newProduct.save();
-  res.send("Signup successful");
+  res.send("Product successful Added");
 });
 
 app.listen(4000);

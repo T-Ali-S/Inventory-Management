@@ -12,6 +12,7 @@ import AdminSignup from "./components/AdminSignup";
 import AdminHome from "./components/AdminHome";
 import AdminNavbar from "./components/AdminNavbar";
 import AddProduct from "./components/AddProduct";
+import EditProduct from "./components/EditProduct";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -123,6 +124,16 @@ function App() {
           <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
           <Alert alert={alert} />
           <AddProduct showAlert={showAlert} />
+        </>
+      ),
+    },
+    {
+      path: "/EditProduct",
+      element: (
+        <>
+          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+          <Alert alert={alert} />
+          <EditProduct showAlert={showAlert} />
         </>
       ),
     },

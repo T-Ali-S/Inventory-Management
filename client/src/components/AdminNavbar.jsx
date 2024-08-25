@@ -59,9 +59,9 @@ function AdminNavbar(props) {
                   <Link class="dropdown-item" to="/addProduct">
                     Add Product
                   </Link>
-                  <a class="dropdown-item" href="#">
+                  <Link class="dropdown-item" to="/EditProduct">
                     Edit Product
-                  </a>
+                  </Link>
                 </div>
               </li>
             </ul>
