@@ -54,7 +54,7 @@ function App() {
       path: "/About",
       element: (
         <>
-          <NavBar isLoggedIn={isLoggedIn} username={username} />
+          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
           <About />
         </>
       ),

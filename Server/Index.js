@@ -93,4 +93,14 @@ app.post("/add-product", async (req, res) => {
   res.send("Product successful Added");
 });
 
+app.post("/deleteProducts", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const proDelete = await Product.deleteOne({ _id: id });
+    res.send({ status: "Ok", data: "Product Deleted" });
+  } catch (error) {
+    return res.send({ error: error.message });
+  }
+});
+
 app.listen(4000);
