@@ -102,5 +102,20 @@ app.post("/deleteProducts", async (req, res) => {
     return res.send({ error: error.message });
   }
 });
+app.post("/editProducts", async (req, res) => {
+  const { _id, name, price } = req.body;
+  try {
+    const product = await Product.findById(_id);
+    if (!product) {
+      return res.status(404).json({ msg: "Product not found" });
+    }
+    product.name = name || product.name; // Update name if provided, otherwise keep the existing value
+    product.price = price || product.price; // Update price if provided, otherwise keep the existing value
+    await product.save();
+    res.send({ status: "Ok", data: "Product Edited" });
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+});
 
 app.listen(4000);

@@ -45,9 +45,9 @@ function AdminNavbar(props) {
                   ShowUsers
                 </Link>
               </li>
-              <li class="nav-item dropdown">
+              <li className="nav-item dropdown">
                 <a
-                  class="nav-link dropdown-toggle"
+                  className="nav-link dropdown-toggle"
                   id="navbarDropdown"
                   type="button"
                   data-bs-toggle="dropdown"
@@ -55,11 +55,11 @@ function AdminNavbar(props) {
                 >
                   Products
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <Link class="dropdown-item" to="/addProduct">
+                <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <Link className="dropdown-item" to="/addProduct">
                     Add Product
                   </Link>
-                  <Link class="dropdown-item" to="/EditProduct">
+                  <Link className="dropdown-item" to="/EditProduct">
                     Edit Product
                   </Link>
                 </div>
