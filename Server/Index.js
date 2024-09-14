@@ -7,7 +7,10 @@ app.use(cors());
 const dbConnection = require("./db/connection");
 const Users = require("./Models/User");
 const Product = require("./Models/Products");
-
+const Channel = require("./Models/Channels");
+const AngleIron = require("./Models/Iron");
+const AngleBar = require("./Models/Bar");
+const Pipes = require("./Models/Pipes");
 // app.post("/", async (req, res) => {
 //   let user = new Users(req.body);
 //   let result = await user.save();
@@ -21,6 +24,42 @@ app.get("/a", async (req, res) => {
 app.get("/getProduct", async (req, res) => {
   let products = await Product.find();
   res.send(products);
+});
+app.get("/getChannel", async (req, res) => {
+  try {
+    const channel = await Channel.find();
+    res.status(200).json(channel);
+  } catch (error) {
+    console.error("Error fetching channels:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+app.get("/getAngleIron", async (req, res) => {
+  try {
+    const angleIron = await AngleIron.find();
+    res.status(200).json(angleIron);
+  } catch (error) {
+    console.error("Error fetching channels:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+app.get("/getAngleBar", async (req, res) => {
+  try {
+    const anglebar = await AngleBar.find();
+    res.status(200).json(anglebar);
+  } catch (error) {
+    console.error("Error fetching channels:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+app.get("/getPipe", async (req, res) => {
+  try {
+    const pipe = await Pipes.find();
+    res.status(200).json(pipe);
+  } catch (error) {
+    console.error("Error fetching channels:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 app.post("/login", (req, res) => {
@@ -83,14 +122,26 @@ app.post("/check-product", async (req, res) => {
 });
 
 app.post("/add-product", async (req, res) => {
-  const { name, price } = req.body;
+  const { name, types } = req.body;
   const newProduct = new Product({
     name,
-    price,
+    types,
   });
 
   await newProduct.save();
   res.send("Product successful Added");
+});
+
+app.post("/addChannel", async (req, res) => {
+  const { product_id, length, width, weight } = req.body;
+  const newChannel = new Channel({
+    product_id,
+    length,
+    width,
+    weight,
+  });
+  await newChannel.save();
+  res.product("New Sub-Category for Channel Saved succesfully");
 });
 
 app.post("/deleteProducts", async (req, res) => {
@@ -103,14 +154,14 @@ app.post("/deleteProducts", async (req, res) => {
   }
 });
 app.post("/editProducts", async (req, res) => {
-  const { _id, name, price } = req.body;
+  const { _id, name, types } = req.body;
   try {
     const product = await Product.findById(_id);
     if (!product) {
       return res.status(404).json({ msg: "Product not found" });
     }
     product.name = name || product.name; // Update name if provided, otherwise keep the existing value
-    product.price = price || product.price; // Update price if provided, otherwise keep the existing value
+    product.types = types || product.types; // Update types if provided, otherwise keep the existing value
     await product.save();
     res.send({ status: "Ok", data: "Product Edited" });
   } catch (error) {
