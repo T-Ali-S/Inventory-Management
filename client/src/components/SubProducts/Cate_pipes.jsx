@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { AuthAdmin } from "../authCheck_AC/authCheck";
 import { Link } from "react-router-dom";
+import { FaCartShopping } from "react-icons/fa6";
 
 function Cate_pipes() {
   const [Pipes, setPipes] = useState([]);
@@ -36,6 +37,7 @@ function Cate_pipes() {
               <th>Guage</th>
               <th>Length</th>
               <th>Width</th>
+              {authCheck ? "" : <th>Action</th>}
             </tr>
           </thead>
           <tbody>
@@ -46,6 +48,13 @@ function Cate_pipes() {
                 <td>{Pipe.guage}</td>
                 <td>{Pipe.length}</td>
                 <td>{Pipe.width}</td>
+                {authCheck ? (
+                  ""
+                ) : (
+                  <td>
+                    <FaCartShopping className="text-success h4" />
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

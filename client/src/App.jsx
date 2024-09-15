@@ -18,10 +18,10 @@ import Category from "./components/SubProducts/Category";
 import Cate_AngleIron from "./components/SubProducts/Cate_AngleIron";
 import Cate_IronBar from "./components/SubProducts/Cate_IronBar";
 import Cate_pipes from "./components/SubProducts/Cate_pipes";
-import AddChannel from "./components/SubProducts/AddChannel";
-import AddAngleiron from "./components/SubProducts/AddAngleiron";
-import AddAngleBar from "./components/SubProducts/AddAngleBar";
-import AddPipes from "./components/SubProducts/AddPipes";
+import AddChannel from "./components/AddSubProducts/AddChannel";
+import AddAngleiron from "./components/AddSubProducts/AddAngleiron";
+import AddAngleBar from "./components/AddSubProducts/AddAngleBar";
+import AddPipes from "./components/AddSubProducts/AddPipes";
 
 function App() {
   const [alert, setAlert] = useState(null);

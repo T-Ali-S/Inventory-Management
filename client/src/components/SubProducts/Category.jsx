@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AuthAdmin } from "../authCheck_AC/authCheck";
 import { Link } from "react-router-dom";
+import { FaCartShopping } from "react-icons/fa6";
 
 function Category() {
   const [channels, setChannels] = useState([]);
@@ -37,6 +38,8 @@ function Category() {
                 <th>Length</th>
                 <th>Width</th>
                 <th>Weight</th>
+
+                {authCheck ? "" : <th>Action</th>}
               </tr>
             </thead>
             <tbody>
@@ -47,6 +50,14 @@ function Category() {
                   <td>{channel.length}</td>
                   <td>{channel.width}</td>
                   <td>{channel.weight}</td>
+
+                  {authCheck ? (
+                    ""
+                  ) : (
+                    <td>
+                      <FaCartShopping className="text-success h4" />
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

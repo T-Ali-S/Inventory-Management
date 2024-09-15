@@ -21,7 +21,7 @@ function Adminlogin(props) {
           props.setusername(result.data.username);
           localStorage.setItem("username", result.data.username);
           localStorage.setItem("isLoggedIn", true);
-          localStorage.setItem("AdminCheck", true);
+          localStorage.setItem("AdminCheck", JSON.stringify(true));
 
           navigate("/AdminHome");
         } else {

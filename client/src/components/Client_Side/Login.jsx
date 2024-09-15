@@ -20,6 +20,7 @@ function Login(props) {
           props.setusername(result.data.username);
           localStorage.setItem("username", result.data.username);
           localStorage.setItem("isLoggedIn", true);
+          localStorage.setItem("AdminCheck", JSON.stringify(false));
           navigate("/");
         } else {
           props.showAlert("Login Failed: " + result.data.message, "warning");
