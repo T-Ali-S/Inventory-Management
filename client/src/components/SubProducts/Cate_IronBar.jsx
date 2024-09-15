@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { AuthAdmin } from "../authCheck_AC/authCheck";
 import { Link } from "react-router-dom";
-import { FaCartShopping } from "react-icons/fa6";
+import { FaCartShopping, FaPencil } from "react-icons/fa6";
 
 function Cate_IronBar() {
   const [AngleBars, setAngleBars] = useState([]);
@@ -35,7 +35,7 @@ function Cate_IronBar() {
               <th>S.no</th>
               <th>Shape</th>
               <th>Length</th>
-              {authCheck ? "" : <th>Action</th>}
+              {authCheck ? <th>Edit</th> : <th>Action</th>}
             </tr>
           </thead>
           <tbody>
@@ -46,7 +46,9 @@ function Cate_IronBar() {
                 <td>{AngleBar.shape}</td>
                 <td>{AngleBar.length}</td>
                 {authCheck ? (
-                  ""
+                  <td>
+                    <FaPencil className="text-success h5" />
+                  </td>
                 ) : (
                   <td>
                     <FaCartShopping className="text-success h4" />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { AuthAdmin } from "../authCheck_AC/authCheck";
 import { Link } from "react-router-dom";
-import { FaCartShopping } from "react-icons/fa6";
+import { FaCartShopping, FaPencil } from "react-icons/fa6";
 
 function Cate_AngleIron() {
   const [AngleIrons, setAngleIrons] = useState([]);
@@ -37,7 +37,7 @@ function Cate_AngleIron() {
                 <th>S.no</th>
                 <th>Length</th>
                 <th>Width</th>
-                {authCheck ? "" : <th>Action</th>}
+                {authCheck ? <th>Edit</th> : <th>Action</th>}
               </tr>
             </thead>
             <tbody>
@@ -48,7 +48,9 @@ function Cate_AngleIron() {
                   <td>{AngleIron.length}</td>
                   <td>{AngleIron.width}</td>
                   {authCheck ? (
-                    ""
+                    <td>
+                      <FaPencil className="text-success h5" />
+                    </td>
                   ) : (
                     <td>
                       <FaCartShopping className="text-success h4" />

@@ -33,7 +33,7 @@ function AdminHome() {
   };
   return (
     <>
-      <div className="text-center h1 pt-3 border m-5">
+      <div className="text-center h1 pt-3 border m-5 ">
         <div>Admin dashBoard</div>
 
         <Link
