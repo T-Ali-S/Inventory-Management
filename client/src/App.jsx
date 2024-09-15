@@ -111,7 +111,7 @@ function App() {
       path: "/AdminSignup",
       element: (
         <>
-          <NavBar />
+          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
           <Alert alert={alert} />
           <AdminSignup showAlert={showAlert} />
         </>

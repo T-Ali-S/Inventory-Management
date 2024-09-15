@@ -8,5 +8,5 @@ export const AuthAdmin = () => {
   // } else {
   //   return false; // User is not an admin
   // }
-  return userData && AuthCheck;
+  return userData && AuthCheck === true;
 };
