@@ -29,7 +29,7 @@ function AddProduct(props) {
         props.showAlert("Unexpected response from server", "warning");
       }
     } else {
-      props.showAlert("Unexpected response fromthe server", "warning");
+      props.showAlert("Unexpected response from the server", "warning");
     }
   };
 

@@ -25,6 +25,15 @@ app.get("/getProduct", async (req, res) => {
   let products = await Product.find();
   res.send(products);
 });
+// app.get("/getChannelCount", async (req, res) => {
+//   try {
+//     const subChannel = await Channel.countDocuments();
+//     res.send({ count: subChannel });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("An error occurred while retrieving product count");
+//   }
+// });
 app.get("/getChannel", async (req, res) => {
   try {
     const channel = await Channel.find();
@@ -43,6 +52,7 @@ app.get("/getAngleIron", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 app.get("/getAngleBar", async (req, res) => {
   try {
     const anglebar = await AngleBar.find();
@@ -120,6 +130,75 @@ app.post("/check-product", async (req, res) => {
     res.send("Product name is available");
   }
 });
+// app.post("/checkChannel", async (req, res) => {
+//   const { length,width,weight } = req.body;
+//   const products = await Product.findOne({ length,width,weight });
+//   if (products) {
+//     res.send("Product name already exists");
+//   } else {
+//     res.send("Product name is available");
+//   }
+// });
+app.post("/checkChannel", async (req, res) => {
+  try {
+    const { length, width, weight } = req.body;
+    const checkChannel = await Channel.findOne({ length, width, weight });
+
+    if (checkChannel) {
+      res.status(409).send("Channel with the same dimensions already exists");
+    } else {
+      res.status(200).send("Channel name is available");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while checking the product");
+  }
+});
+app.post("/checkAngleBar", async (req, res) => {
+  try {
+    const { shape, length } = req.body;
+    const checkAngleBar = await AngleBar.findOne({ shape, length });
+
+    if (checkAngleBar) {
+      res.status(409).send("AngleBar with the same dimensions already exists");
+    } else {
+      res.status(200).send("AngleBar name is available");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while checking the product");
+  }
+});
+app.post("/checkAngleIron", async (req, res) => {
+  try {
+    const { length, width } = req.body;
+    const checkAngleIron = await AngleIron.findOne({ length, width });
+
+    if (checkAngleIron) {
+      res.status(409).send("AngleIron with the same dimensions already exists");
+    } else {
+      res.status(200).send("AngleIron name is available");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while checking the product");
+  }
+});
+app.post("/checkPipes", async (req, res) => {
+  try {
+    const { guage, length, width } = req.body;
+    const checkPipes = await Pipes.findOne({ guage, length, width });
+
+    if (checkPipes) {
+      res.status(409).send("Pipes with the same dimensions already exists");
+    } else {
+      res.status(200).send("Pipes name is available");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while checking the product");
+  }
+});
 
 app.post("/add-product", async (req, res) => {
   const { name, types } = req.body;
@@ -141,7 +220,66 @@ app.post("/addChannel", async (req, res) => {
     weight,
   });
   await newChannel.save();
-  res.product("New Sub-Category for Channel Saved succesfully");
+  res.send("New Sub-Category for Channel Saved succesfully");
+});
+app.post("/addAngleIron", async (req, res) => {
+  const { product_id, length, width } = req.body;
+  const newAngleIron = new AngleIron({
+    product_id,
+    length,
+    width,
+  });
+  await newAngleIron.save();
+  res.send("New Sub-Category for AngleIron Saved succesfully");
+});
+app.post("/addAngleBar", async (req, res) => {
+  const { product_id, shape, length } = req.body;
+
+  try {
+    // Validate input fields
+    if (!product_id || !shape || !length) {
+      return res.status(400).send("All fields are required");
+    }
+
+    // Create a new AngleBar object
+    const newAngleBar = new AngleBar({
+      product_id,
+      shape,
+      length,
+    });
+
+    // Save the new AngleBar in the database
+    await newAngleBar.save();
+    res.status(201).send("New Sub-Category for AngleBar Saved successfully");
+  } catch (error) {
+    console.error("Error saving AngleBar:", error);
+    res.status(500).send("Error saving AngleBar");
+  }
+});
+app.post("/addPipes", async (req, res) => {
+  const { product_id, guage, width, length } = req.body;
+
+  try {
+    // Validate input fields
+    if (!product_id || !guage || !width || !length) {
+      return res.status(400).send("All fields are required");
+    }
+
+    // Create a new AngleBar object
+    const newPipes = new Pipes({
+      product_id,
+      guage,
+      width,
+      length,
+    });
+
+    // Save the new AngleBar in the database
+    await newPipes.save();
+    res.status(201).send("New Sub-Category for Pipes Saved successfully");
+  } catch (error) {
+    console.error("Error saving Pipes:", error);
+    res.status(500).send("Error saving Pipes");
+  }
 });
 
 app.post("/deleteProducts", async (req, res) => {

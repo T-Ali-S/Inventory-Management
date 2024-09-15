@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AuthAdmin } from "../authCheck_AC/authCheck";
+import { Link } from "react-router-dom";
 
 function Cate_IronBar() {
   const [AngleBars, setAngleBars] = useState([]);
@@ -62,9 +63,12 @@ function Cate_IronBar() {
       )}
       {authCheck ? (
         <div class="d-grid gap-2 col-6 mx-auto">
-          <button className="btn btn-outline-primary btn-lg text-center">
+          <Link
+            to="/AddAngleBar"
+            className="btn btn-outline-primary btn-lg text-center"
+          >
             Add Category
-          </button>
+          </Link>
         </div>
       ) : (
         ""

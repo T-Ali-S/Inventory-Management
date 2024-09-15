@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 function Home() {
   const [products, setProducts] = useState([]);
+  const [channel, setChannel] = useState([]);
   const navigate = useNavigate();
 
   const fetchProducts = async () => {
@@ -14,6 +15,7 @@ function Home() {
       console.error("Error while fetching products:", error);
     }
   };
+
   useEffect(() => {
     fetchProducts();
   }, []);

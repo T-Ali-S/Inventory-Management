@@ -18,6 +18,10 @@ import Category from "./components/SubProducts/Category";
 import Cate_AngleIron from "./components/SubProducts/Cate_AngleIron";
 import Cate_IronBar from "./components/SubProducts/Cate_IronBar";
 import Cate_pipes from "./components/SubProducts/Cate_pipes";
+import AddChannel from "./components/SubProducts/AddChannel";
+import AddAngleiron from "./components/SubProducts/AddAngleiron";
+import AddAngleBar from "./components/SubProducts/AddAngleBar";
+import AddPipes from "./components/SubProducts/AddPipes";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -145,6 +149,58 @@ function App() {
           {/* <NavBar isLoggedIn={isLoggedIn} username={username} /> */}
           <Alert alert={alert} />
           <Category showAlert={showAlert} />
+        </>
+      ),
+    },
+    {
+      path: "/AddChannel",
+      element: (
+        <>
+          {authCheck ? (
+            <>
+              <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+              <Alert alert={alert} />
+              <AddChannel showAlert={showAlert} />
+            </>
+          ) : (
+            <>
+              <NavBar isLoggedIn={isLoggedIn} username={username} />
+              <Alert alert={alert} />
+              <Category showAlert={showAlert} />
+              <Home />
+            </>
+          )}
+          {/* <NavBar isLoggedIn={isLoggedIn} username={username} /> */}
+        </>
+      ),
+    },
+    {
+      path: "/AddAngleiron",
+      element: (
+        <>
+          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+          <Alert alert={alert} />
+          <AddAngleiron showAlert={showAlert} />
+        </>
+      ),
+    },
+    {
+      path: "/AddAngleBar",
+      element: (
+        <>
+          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+          <Alert alert={alert} />
+          <AddAngleBar showAlert={showAlert} />
+        </>
+      ),
+    },
+    {
+      path: "/AddPipes",
+      element: (
+        <>
+          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+          <Alert alert={alert} />
+          <AddPipes showAlert={showAlert} />
         </>
       ),
     },

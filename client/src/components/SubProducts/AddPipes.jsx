@@ -1,53 +1,53 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function AddChannel(props) {
-  const [product_id, setProduct_id] = useState("66dd9bd5e06600a232ed13c8");
-  const [length, setLength] = useState("");
+function AddPipes() {
+  // Make sure to pass props here
+  const [product_id, setProduct_id] = useState("66dd9bd5e06600a232ed13c9");
   const [width, setWidth] = useState("");
-  const [weight, setWeight] = useState("");
+  const [length, setLength] = useState("");
+  const [guage, setGuage] = useState("");
 
   const collectData = async (e) => {
     e.preventDefault();
 
     try {
-      const result = await axios.post("http://localhost:4000/checkChannel", {
-        length,
+      // Check if the Pipes with the same dimensions already exists
+      const result = await axios.post("http://localhost:4000/checkPipes", {
+        guage,
         width,
-        weight,
+        length,
       });
 
-      // If no conflict, proceed to save the new channel
+      // If the request is successful (200), proceed to add the new Pipes
       if (result.status === 200) {
-        const ChannelResponse = await axios.post(
-          "http://localhost:4000/addChannel",
+        const PipesResponse = await axios.post(
+          "http://localhost:4000/addPipes",
           {
             product_id,
+            guage, // Added product_id here, if necessary
             length,
             width,
-            weight,
           }
         );
-        if (
-          ChannelResponse.data ===
-          "New Sub-Category for Channel Saved succesfully"
-        ) {
+
+        if (PipesResponse.status === 201) {
           props.showAlert(
-            "New Sub-Category for Channel Saved succesfully",
+            "New Sub-Category for Pipes Saved succesfully",
             "success"
           );
-          setLength("");
-          setWeight("");
+          // Clear form fields after successful submission
           setWidth("");
+          setLength("");
         } else {
           props.showAlert("Unexpected response from server", "warning");
         }
       }
     } catch (error) {
-      // Handle 409 conflict error and other errors
+      // Handle 409 conflict error and any other errors
       if (error.response && error.response.status === 409) {
         props.showAlert(
-          "Channel with the same dimensions already exists",
+          "Pipes with the same dimensions already exists",
           "warning"
         );
       } else {
@@ -59,23 +59,23 @@ function AddChannel(props) {
   return (
     <>
       <div className=" text-center border-2 m-5">
-        <p className="h3 m-3">Add Channel</p>
+        <p className="h3 m-3">Add Pipes</p>
         <form onSubmit={collectData} className="">
           <div className="mb-3 mt-5">
             <input
               type="text"
               className="form-label border-2 border-gray-700 p-2"
-              value={length}
-              placeholder="Enter Length"
-              onChange={(e) => setLength(e.target.value)}
+              value={guage}
+              placeholder="Enter guage"
+              onChange={(e) => setGuage(e.target.value)}
               required
             />
             <br />
             <input
               type="text"
-              className="form-label border-2 m-1 border-gray-700 p-2"
+              className="form-label border-2 border-gray-700 p-2"
               value={width}
-              placeholder="Enter Width"
+              placeholder="Enter width"
               onChange={(e) => setWidth(e.target.value)}
               required
             />
@@ -83,9 +83,9 @@ function AddChannel(props) {
             <input
               type="text"
               className="form-label border-2 m-1 border-gray-700 p-2"
-              value={weight}
-              placeholder="Enter weight"
-              onChange={(e) => setWeight(e.target.value)}
+              value={length}
+              placeholder="Enter Length"
+              onChange={(e) => setLength(e.target.value)}
               required
             />
           </div>
@@ -101,4 +101,4 @@ function AddChannel(props) {
   );
 }
 
-export default AddChannel;
+export default AddPipes;

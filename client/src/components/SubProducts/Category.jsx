@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AuthAdmin } from "../authCheck_AC/authCheck";
+import { Link } from "react-router-dom";
 
 function Category() {
   const [channels, setChannels] = useState([]);
@@ -65,10 +66,14 @@ function Category() {
           </div>
         )}
         {authCheck ? (
-          <div class="d-grid gap-2 col-6 mx-auto">
-            <button className="btn btn-outline-primary btn-lg text-center">
+          <div className="d-grid gap-2 col-6 mx-auto">
+            <Link
+              type="button"
+              to="/AddChannel"
+              className="btn btn-outline-primary btn-lg text-center"
+            >
               Add Category
-            </button>
+            </Link>
           </div>
         ) : (
           ""
