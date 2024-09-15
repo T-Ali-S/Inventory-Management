@@ -25,7 +25,7 @@ function Cate_pipes() {
   }, []);
   return (
     <div className="m-5">
-      <p className="text-center h1 ">Angle Iron</p>
+      <p className="text-center h1 ">Pipes</p>
       {Pipes.length > 0 ? (
         <table className="table table-hover border text-center">
           <thead>
@@ -33,6 +33,7 @@ function Cate_pipes() {
               {/* <th>Name</th> */}
               {/* <th>S.no</th> */}
               <th>S.no</th>
+              <th>Guage</th>
               <th>Length</th>
               <th>Width</th>
             </tr>
@@ -42,6 +43,7 @@ function Cate_pipes() {
               <tr key={Pipes._id} className="text-center">
                 {/* <td>{Pipe.name}</td> */}
                 <td>{index + 1}</td>
+                <td>{Pipe.guage}</td>
                 <td>{Pipe.length}</td>
                 <td>{Pipe.width}</td>
               </tr>

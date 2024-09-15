@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function AddPipes() {
+function AddPipes(props) {
   // Make sure to pass props here
   const [product_id, setProduct_id] = useState("66dd9bd5e06600a232ed13c9");
   const [width, setWidth] = useState("");
@@ -36,9 +36,9 @@ function AddPipes() {
             "New Sub-Category for Pipes Saved succesfully",
             "success"
           );
-          // Clear form fields after successful submission
           setWidth("");
           setLength("");
+          setGuage("");
         } else {
           props.showAlert("Unexpected response from server", "warning");
         }
