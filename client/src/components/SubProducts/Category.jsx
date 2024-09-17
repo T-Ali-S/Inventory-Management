@@ -6,7 +6,7 @@ import { FaCartShopping, FaPencil } from "react-icons/fa6";
 function Category() {
   const [channels, setChannels] = useState([]);
   const authCheck = AuthAdmin();
-
+  let count = 0;
   const fetchChannels = async () => {
     try {
       const response = await fetch("http://localhost:4000/getChannel");
@@ -38,7 +38,6 @@ function Category() {
                 <th>Length</th>
                 <th>Width</th>
                 <th>Weight</th>
-
                 {authCheck ? <th>Edit</th> : <th>Action</th>}
               </tr>
             </thead>
@@ -46,7 +45,8 @@ function Category() {
               {channels.map((channel, index) => (
                 <tr key={channels._id} className="text-center">
                   {/* <td>{channel.name}</td> */}
-                  <td>{index + 1}</td>
+
+                  <td>{(count = index + 1)}</td>
                   <td>{channel.length}</td>
                   <td>{channel.width}</td>
                   <td>{channel.weight}</td>
@@ -78,6 +78,7 @@ function Category() {
             No Products to review
           </div>
         )}
+
         {authCheck ? (
           <div className="d-grid gap-2 col-6 mx-auto">
             <Link

@@ -168,14 +168,14 @@ function EditProduct(props) {
                 <h5 className="modal-title" id="exampleModalLabel">
                   Edit Product
                 </h5>
-                <button
+                {/* <button
                   type="button"
                   className="close"
                   onClick={closeModal}
                   aria-label="Close"
                 >
                   <span aria-hidden="true">&times;</span>
-                </button>
+                </button> */}
               </div>
               <div className="modal-body">
                 <form onSubmit={submitForm}>

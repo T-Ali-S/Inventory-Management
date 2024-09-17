@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-function Home() {
+function Home(props) {
   const [products, setProducts] = useState([]);
   const [channel, setChannel] = useState([]);
   const navigate = useNavigate();
