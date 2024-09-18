@@ -116,13 +116,15 @@ function EditProduct(props) {
                     <BsFillTrashFill
                       type="button"
                       onClick={() => deleteProduct(product._id)}
-                      className="mb-1 ml-3 text-danger "
+                      className="
+                        me-3
+                        text-danger "
                     />
-                    <br />
+
                     <BsFillPencilFill
                       type="button"
                       onClick={() => openModal(product)}
-                      className="mt-1 text-success"
+                      className=" text-success"
                     />
                   </td>
                 </tr>

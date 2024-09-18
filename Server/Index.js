@@ -11,11 +11,6 @@ const Channel = require("./Models/Channels");
 const AngleIron = require("./Models/Iron");
 const AngleBar = require("./Models/Bar");
 const Pipes = require("./Models/Pipes");
-// app.post("/", async (req, res) => {
-//   let user = new Users(req.body);
-//   let result = await user.save();
-//   res.send("Signup successful");
-// });
 
 app.get("/a", async (req, res) => {
   let users = await Users.find();
@@ -25,15 +20,7 @@ app.get("/getProduct", async (req, res) => {
   let products = await Product.find();
   res.send(products);
 });
-// app.get("/getChannelCount", async (req, res) => {
-//   try {
-//     const subChannel = await Channel.countDocuments();
-//     res.send({ count: subChannel });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("An error occurred while retrieving product count");
-//   }
-// });
+
 app.get("/getChannel", async (req, res) => {
   try {
     const channel = await Channel.find();
@@ -55,10 +42,10 @@ app.get("/getAngleIron", async (req, res) => {
 
 app.get("/getAngleBar", async (req, res) => {
   try {
-    const anglebar = await AngleBar.find();
-    res.status(200).json(anglebar);
+    const angleBars = await AngleBar.find();
+    res.status(200).json(angleBars);
   } catch (error) {
-    console.error("Error fetching channels:", error);
+    console.error("Error fetching AngleBars:", error);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -130,15 +117,7 @@ app.post("/check-product", async (req, res) => {
     res.send("Product name is available");
   }
 });
-// app.post("/checkChannel", async (req, res) => {
-//   const { length,width,weight } = req.body;
-//   const products = await Product.findOne({ length,width,weight });
-//   if (products) {
-//     res.send("Product name already exists");
-//   } else {
-//     res.send("Product name is available");
-//   }
-// });
+
 app.post("/checkChannel", async (req, res) => {
   try {
     const { length, width, weight } = req.body;
@@ -156,19 +135,29 @@ app.post("/checkChannel", async (req, res) => {
 });
 app.post("/checkAngleBar", async (req, res) => {
   try {
-    const { shape, length } = req.body;
-    const checkAngleBar = await AngleBar.findOne({ shape, length });
+    const { _id, shape, length } = req.body;
+
+    // Check if another row with the same shape and length already exists (excluding the current one being edited)
+    const checkAngleBar = await AngleBar.findOne({
+      shape: shape,
+      length: length,
+      _id: { $ne: _id }, // Exclude the current row by _id
+    });
 
     if (checkAngleBar) {
-      res.status(409).send("AngleBar with the same dimensions already exists");
+      // If such a row exists, send a conflict error
+      res
+        .status(409)
+        .send("An AngleBar with the same shape and length already exists.");
     } else {
-      res.status(200).send("AngleBar name is available");
+      // No conflicts, safe to proceed with editing
+      res.status(200).send("AngleBar is available for editing.");
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while checking the product");
+    res.status(500).send({ error: "Error checking AngleBar" });
   }
 });
+
 app.post("/checkAngleIron", async (req, res) => {
   try {
     const { length, width } = req.body;
@@ -291,6 +280,7 @@ app.post("/deleteProducts", async (req, res) => {
     return res.send({ error: error.message });
   }
 });
+
 app.post("/editProducts", async (req, res) => {
   const { _id, name, types } = req.body;
   try {
@@ -302,6 +292,57 @@ app.post("/editProducts", async (req, res) => {
     product.types = types || product.types; // Update types if provided, otherwise keep the existing value
     await product.save();
     res.send({ status: "Ok", data: "Product Edited" });
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+});
+
+app.post("/editChannel", async (req, res) => {
+  const { _id, length, width, weight } = req.body;
+  try {
+    const channel = await Channel.findById(_id);
+    if (!channel) {
+      return res.status(404).json({ msg: "Channel not found" });
+    }
+    channel.length = length || channel.length; // Update name if provided, otherwise keep the existing value
+    channel.width = width || channel.width; // Update name if provided, otherwise keep the existing value
+    channel.weight = weight || channel.weight; // Update name if provided, otherwise keep the existing value
+
+    await channel.save();
+    res.send({ status: "Ok", data: "Channel Edited" });
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+});
+app.post("/editAngleIron", async (req, res) => {
+  const { _id, length, width } = req.body;
+  try {
+    const angleIron = await AngleIron.findById(_id);
+    if (!angleIron) {
+      return res.status(404).json({ msg: "AngleIron not found" });
+    }
+    angleIron.length = length || angleIron.length; // Update name if provided, otherwise keep the existing value
+    angleIron.width = width || angleIron.width;
+
+    await angleIron.save();
+    res.send({ status: "Ok", data: "AngleIron Edited" });
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+});
+app.post("/editAngleBar", async (req, res) => {
+  const { _id, length, shape } = req.body;
+  try {
+    const angleBar = await AngleBar.findById(_id);
+    if (!angleBar) {
+      return res.status(404).json({ msg: "AngleBar not found" });
+    }
+
+    angleBar.length = length || angleBar.length;
+    angleBar.shape = shape || angleBar.shape;
+
+    await angleBar.save();
+    res.send({ status: "Ok", data: "AngleBar Edited" });
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }

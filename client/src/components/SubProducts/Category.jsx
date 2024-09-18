@@ -1,11 +1,41 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { AuthAdmin } from "../authCheck_AC/authCheck";
 import { Link } from "react-router-dom";
 import { FaCartShopping, FaPencil } from "react-icons/fa6";
+import axios from "axios";
 
-function Category() {
+function Category(props) {
   const [channels, setChannels] = useState([]);
   const authCheck = AuthAdmin();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [selectedChannel, setSelectedChannel] = useState({
+    _id: "",
+    length: "",
+    width: "",
+    weight: "",
+  });
+
+  const openModal = (channel) => {
+    setSelectedChannel(channel);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedChannel({
+      _id: "",
+      length: "",
+      width: "",
+      weight: "",
+    });
+  };
+
+  const inputChangeHandler = (e) => {
+    const { name, value } = e.target;
+    setSelectedChannel({ ...selectedChannel, [name]: value });
+  };
+
   let count = 0;
   const fetchChannels = async () => {
     try {
@@ -14,26 +44,84 @@ function Category() {
         throw new Error("Network response was not ok");
       }
       const result = await response.json();
-      console.log(result);
       setChannels(result);
     } catch (error) {
       console.error("Error while fetching Channels:", error);
+    } finally {
+      setLoading(false); // Set loading to false once channels are fetched or error occurs
+    }
+  };
+
+  const submitForm = async (e) => {
+    e.preventDefault();
+
+    try {
+      const checkResult = await axios.post(
+        "http://localhost:4000/checkChannel",
+        {
+          length: selectedChannel.length,
+          width: selectedChannel.width,
+          weight: selectedChannel.weight,
+        }
+      );
+      if (checkResult.status === 409) {
+        props.showAlert(
+          "Channel with the same dimensions already exists",
+          "warning"
+        );
+        return;
+      }
+
+      const response = await axios.post(
+        "http://localhost:4000/editChannel",
+        selectedChannel
+      );
+
+      if (response.data.status === "Ok") {
+        props.showAlert("Channel successfully edited", "success");
+        closeModal();
+        fetchChannels();
+      } else {
+        props.showAlert("Unexpected response from the server", "warning");
+      }
+    } catch (error) {
+      console.error("Error while editing product:", error);
+      props.showAlert("Error while editing product", "danger");
     }
   };
 
   useEffect(() => {
-    fetchChannels();
+    let isMounted = true;
+    fetchChannels().then(() => {
+      if (isMounted) setChannels((prev) => prev); // Ensure component is mounted before updating state
+    });
+
+    return () => {
+      isMounted = false; // Cleanup to prevent memory leaks
+    };
   }, []);
 
   return (
     <>
       <div className="m-5">
-        <p className="text-center h1 ">Channels</p>
-        {channels.length > 0 ? (
+        <p className="text-center h1">Channels</p>
+        {loading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "50vh",
+              fontSize: "1.5rem",
+              color: "gray",
+            }}
+          >
+            Loading...
+          </div>
+        ) : channels.length > 0 ? (
           <table className="table table-hover border text-center">
             <thead>
               <tr className="h4 text-center">
-                {/* <th>Name</th> */}
                 <th>S.no</th>
                 <th>Length</th>
                 <th>Width</th>
@@ -43,9 +131,7 @@ function Category() {
             </thead>
             <tbody>
               {channels.map((channel, index) => (
-                <tr key={channels._id} className="text-center">
-                  {/* <td>{channel.name}</td> */}
-
+                <tr key={channel._id} className="text-center">
                   <td>{(count = index + 1)}</td>
                   <td>{channel.length}</td>
                   <td>{channel.width}</td>
@@ -53,7 +139,11 @@ function Category() {
 
                   {authCheck ? (
                     <td>
-                      <FaPencil className="text-success h5" />
+                      <FaPencil
+                        className="text-success h5"
+                        type="button"
+                        onClick={() => openModal(channel)}
+                      />
                     </td>
                   ) : (
                     <td>
@@ -79,7 +169,7 @@ function Category() {
           </div>
         )}
 
-        {authCheck ? (
+        {authCheck && (
           <div className="d-grid gap-2 col-6 mx-auto">
             <Link
               type="button"
@@ -89,10 +179,91 @@ function Category() {
               Add Category
             </Link>
           </div>
-        ) : (
-          ""
         )}
       </div>
+
+      {isModalOpen && (
+        <div
+          className="modal fade show mt-4"
+          onClick={closeModal} // close modal on background click
+          style={{
+            display: "block",
+            position: "fixed",
+            top: "55%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1050,
+          }}
+        >
+          <div
+            className="modal-dialog"
+            role="document"
+            onClick={(e) => e.stopPropagation()} // prevent modal close when clicking inside
+          >
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">
+                  Edit Channel
+                </h5>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={submitForm}>
+                  <div className="text-center">
+                    <input
+                      type="text"
+                      name="length"
+                      value={selectedChannel.length}
+                      className="m-3 border-2 p-2"
+                      placeholder="Enter Channel Length"
+                      onChange={inputChangeHandler}
+                    />
+                    <br />
+                    <input
+                      type="text"
+                      name="width"
+                      value={selectedChannel.width}
+                      className="m-3 border-2 p-2"
+                      placeholder="Enter Channel Width"
+                      onChange={inputChangeHandler}
+                    />
+                    <br />
+                    <input
+                      type="text"
+                      name="weight"
+                      value={selectedChannel.weight}
+                      className="m-3 border-2 p-2"
+                      placeholder="Enter Channel Weight"
+                      onChange={inputChangeHandler}
+                    />
+                  </div>
+                  <br />
+                  <div className="text-center">
+                    <button
+                      type="submit"
+                      className="btn btn-success m-1"
+                      disabled={
+                        !selectedChannel.length ||
+                        !selectedChannel.width ||
+                        !selectedChannel.weight
+                      } // Disable button if any field is empty
+                    >
+                      Apply Changes
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary m-0"
+                      onClick={closeModal}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
