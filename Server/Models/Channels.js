@@ -5,6 +5,7 @@ const UsersSchema = new mongoose.Schema({
   length: String,
   width: String,
   weight: String,
+  price: String,
 });
 
 module.exports = mongoose.model("channel", UsersSchema);

@@ -11,6 +11,7 @@ const Channel = require("./Models/Channels");
 const AngleIron = require("./Models/Iron");
 const AngleBar = require("./Models/Bar");
 const Pipes = require("./Models/Pipes");
+const Sale = require("./Models/Sales");
 
 app.get("/a", async (req, res) => {
   let users = await Users.find();
@@ -118,21 +119,31 @@ app.post("/check-product", async (req, res) => {
   }
 });
 
-app.post("/checkChannel", async (req, res) => {
-  try {
-    const { length, width, weight } = req.body;
-    const checkChannel = await Channel.findOne({ length, width, weight });
+// app.post("/checkChannel", async (req, res) => {
+//   try {
+//     const { length, width, weight, _id, price } = req.body; // Include _id in the request body
 
-    if (checkChannel) {
-      res.status(409).send("Channel with the same dimensions already exists");
-    } else {
-      res.status(200).send("Channel name is available");
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while checking the product");
-  }
-});
+//     // Find another channel with the same dimensions, excluding the current one
+//     const checkChannel = await Channel.findOne({
+//       length,
+//       width,
+//       weight,
+//       price,
+//       _id: { $ne: _id }, // Exclude the current channel from the search
+//     });
+
+//     if (checkChannel) {
+//       console.log("Same data exist in the database");
+//       res.status(409).send("Channel with the same dimensions already exists");
+//     } else {
+//       res.status(200).send("Channel name is available");
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("An error occurred while checking the product");
+//   }
+// });
+
 app.post("/checkAngleBar", async (req, res) => {
   try {
     const { _id, shape, length } = req.body;
@@ -160,8 +171,8 @@ app.post("/checkAngleBar", async (req, res) => {
 
 app.post("/checkAngleIron", async (req, res) => {
   try {
-    const { length, width } = req.body;
-    const checkAngleIron = await AngleIron.findOne({ length, width });
+    const { length, width, price } = req.body;
+    const checkAngleIron = await AngleIron.findOne({ length, width, price });
 
     if (checkAngleIron) {
       res.status(409).send("AngleIron with the same dimensions already exists");
@@ -201,12 +212,13 @@ app.post("/add-product", async (req, res) => {
 });
 
 app.post("/addChannel", async (req, res) => {
-  const { product_id, length, width, weight } = req.body;
+  const { product_id, length, width, weight, price } = req.body;
   const newChannel = new Channel({
     product_id,
     length,
     width,
     weight,
+    price,
   });
   await newChannel.save();
   res.send("New Sub-Category for Channel Saved succesfully");
@@ -281,41 +293,30 @@ app.post("/deleteProducts", async (req, res) => {
   }
 });
 
-app.post("/editProducts", async (req, res) => {
-  const { _id, name, types } = req.body;
-  try {
-    const product = await Product.findById(_id);
-    if (!product) {
-      return res.status(404).json({ msg: "Product not found" });
-    }
-    product.name = name || product.name; // Update name if provided, otherwise keep the existing value
-    product.types = types || product.types; // Update types if provided, otherwise keep the existing value
-    await product.save();
-    res.send({ status: "Ok", data: "Product Edited" });
-  } catch (error) {
-    return res.status(500).send({ error: error.message });
-  }
-});
-
 app.post("/editChannel", async (req, res) => {
-  const { _id, length, width, weight } = req.body;
+  const { _id, length, width, weight, price } = req.body;
   try {
     const channel = await Channel.findById(_id);
     if (!channel) {
       return res.status(404).json({ msg: "Channel not found" });
     }
-    channel.length = length || channel.length; // Update name if provided, otherwise keep the existing value
-    channel.width = width || channel.width; // Update name if provided, otherwise keep the existing value
-    channel.weight = weight || channel.weight; // Update name if provided, otherwise keep the existing value
 
+    // Only update fields that are provided, otherwise keep existing values
+    channel.length = length || channel.length;
+    channel.width = width || channel.width;
+    channel.weight = weight || channel.weight;
+    channel.price = price || channel.price; // Corrected this line
+
+    // Save the updated channel
     await channel.save();
     res.send({ status: "Ok", data: "Channel Edited" });
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
 });
+
 app.post("/editAngleIron", async (req, res) => {
-  const { _id, length, width } = req.body;
+  const { _id, length, width, price } = req.body;
   try {
     const angleIron = await AngleIron.findById(_id);
     if (!angleIron) {
@@ -323,6 +324,7 @@ app.post("/editAngleIron", async (req, res) => {
     }
     angleIron.length = length || angleIron.length; // Update name if provided, otherwise keep the existing value
     angleIron.width = width || angleIron.width;
+    angleIron.price = price || angleIron.price;
 
     await angleIron.save();
     res.send({ status: "Ok", data: "AngleIron Edited" });
@@ -345,6 +347,25 @@ app.post("/editAngleBar", async (req, res) => {
     res.send({ status: "Ok", data: "AngleBar Edited" });
   } catch (error) {
     return res.status(500).send({ error: error.message });
+  }
+});
+
+app.post("/Sales", async (req, res) => {
+  const salesData = req.body.sales;
+
+  if (!Array.isArray(salesData) || salesData.length === 0) {
+    return res.status(400).json({ message: "No sales data Provided" });
+  }
+  try {
+    const salesRecords = await Sale.insertMany(salesData);
+    res
+      .status(200)
+      .json({ message: "Sales recoreded successfully", salesRecords });
+  } catch (error) {
+    console.error("Error saving sales data:", error);
+    res
+      .status(500)
+      .json({ message: "Error saving sales data", error: error.message });
   }
 });
 

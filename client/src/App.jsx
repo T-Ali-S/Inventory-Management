@@ -22,6 +22,7 @@ import AddChannel from "./components/AddSubProducts/AddChannel";
 import AddAngleiron from "./components/AddSubProducts/AddAngleiron";
 import AddAngleBar from "./components/AddSubProducts/AddAngleBar";
 import AddPipes from "./components/AddSubProducts/AddPipes";
+import Sell from "./components/AdminSide/Sell";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -253,6 +254,16 @@ function App() {
           <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
           <Alert alert={alert} />
           <EditProduct showAlert={showAlert} />
+        </>
+      ),
+    },
+    {
+      path: "/Sell",
+      element: (
+        <>
+          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+          <Alert alert={alert} />
+          <Sell showAlert={showAlert} />
         </>
       ),
     },

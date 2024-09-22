@@ -19,15 +19,28 @@ function Home(props) {
   useEffect(() => {
     fetchProducts();
   }, []);
+
   const handleRowClick = (index) => {
     if (index === 0) {
-      navigate("/Category");
+      if (props.isSellpage === true) {
+        navigate("/Category", {
+          state: { showSelectOption: true },
+        });
+      } else {
+        navigate("/Category");
+      }
     } else if (index === 1) {
       navigate("/Cate_IronBar");
     } else if (index === 3) {
       navigate("/Cate_pipes");
     } else if (index === 2) {
-      navigate("/Cate_AngleIron");
+      if (props.isSellpage === true) {
+        navigate("/Cate_AngleIron", {
+          state: { showSelectOption: true },
+        });
+      } else {
+        navigate("/Cate_AngleIron");
+      }
     } else {
       navigate("/Login");
     }

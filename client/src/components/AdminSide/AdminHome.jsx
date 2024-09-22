@@ -34,7 +34,7 @@ function AdminHome() {
   return (
     <>
       <div className="text-center h1 pt-3 border m-5 ">
-        <div>Admin dashBoard</div>
+        <div>Admin DashBoard</div>
 
         <Link
           className="border-2 btn btn-outline-primary mb-3"
