@@ -30,9 +30,21 @@ function Home(props) {
         navigate("/Category");
       }
     } else if (index === 1) {
-      navigate("/Cate_IronBar");
+      if (props.isSellpage === true) {
+        navigate("/Cate_IronBar", {
+          state: { showSelectOption: true },
+        });
+      } else {
+        navigate("/Cate_IronBar");
+      }
     } else if (index === 3) {
-      navigate("/Cate_pipes");
+      if (props.isSellpage === true) {
+        navigate("/Cate_pipes", {
+          state: { showSelectOption: true },
+        });
+      } else {
+        navigate("/Cate_pipes");
+      }
     } else if (index === 2) {
       if (props.isSellpage === true) {
         navigate("/Cate_AngleIron", {

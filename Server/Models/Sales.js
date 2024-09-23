@@ -5,6 +5,7 @@ const UsersSchema = new mongoose.Schema({
   length: String,
   width: String,
   weight: String,
+  guage: String,
   quantity: String,
   price: String,
   date: { type: Date, default: Date.now },

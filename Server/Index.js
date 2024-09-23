@@ -293,8 +293,29 @@ app.post("/deleteProducts", async (req, res) => {
   }
 });
 
+app.post("/editPipes", async (req, res) => {
+  const { _id, length, width, guage, price } = req.body;
+  try {
+    const pipes = await Pipes.findById(_id);
+    if (!pipes) {
+      return res.status(404).json({ msg: "Pipes not found" });
+    }
+
+    // Only update fields that are provided, otherwise keep existing values
+    pipes.length = length || pipes.length;
+    pipes.width = width || pipes.width;
+    pipes.guage = guage || pipes.guage;
+    pipes.price = price || pipes.price; // Corrected this line
+
+    // Save the updated channel
+    await pipes.save();
+    res.send({ status: "Ok", data: "Pipes Edited" });
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+});
 app.post("/editChannel", async (req, res) => {
-  const { _id, length, width, weight, price } = req.body;
+  const { _id, length, width, guauge, price } = req.body;
   try {
     const channel = await Channel.findById(_id);
     if (!channel) {
