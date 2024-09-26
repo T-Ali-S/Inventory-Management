@@ -59,6 +59,15 @@ app.get("/getPipe", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+app.get("/getSales", async (req, res) => {
+  try {
+    const sales = await Sale.find();
+    res.status(200).json(sales);
+  } catch (error) {
+    console.error("Error fetching channels:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
@@ -387,6 +396,54 @@ app.post("/Sales", async (req, res) => {
     res
       .status(500)
       .json({ message: "Error saving sales data", error: error.message });
+  }
+});
+
+app.get("/getFilterSales", async (req, res) => {
+  try {
+    const { day, month, year, productName, paymentType } = req.query;
+
+    let match = {};
+
+    // Check if any date filter (year, month, day) is provided
+    if (year || month || day) {
+      let dateMatch = {};
+      if (year) dateMatch.year = Number(year);
+      if (month) dateMatch.month = new Date(`${month} 1`).getMonth() + 1; // Convert month name to month number
+      if (day) dateMatch.day = Number(day);
+
+      match = {
+        ...match,
+        $expr: {
+          $and: [
+            year ? { $eq: [{ $year: "$date" }, dateMatch.year] } : {},
+            month ? { $eq: [{ $month: "$date" }, dateMatch.month] } : {},
+            day ? { $eq: [{ $dayOfMonth: "$date" }, dateMatch.day] } : {},
+          ],
+        },
+      };
+    }
+
+    // Add product name filter if provided
+    if (productName) {
+      match.name = productName;
+    }
+
+    // Add payment type filter if provided
+    if (paymentType) {
+      match.paymentType = paymentType;
+    }
+
+    // If no filters are provided, return all sales
+    const sales =
+      Object.keys(match).length === 0
+        ? await Sale.find({}) // No filter, return all sales
+        : await Sale.aggregate([{ $match: match }]); // Apply filters
+
+    res.status(200).json(sales);
+  } catch (error) {
+    console.error("Error fetching sales:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 

@@ -23,6 +23,7 @@ import AddAngleiron from "./components/AddSubProducts/AddAngleiron";
 import AddAngleBar from "./components/AddSubProducts/AddAngleBar";
 import AddPipes from "./components/AddSubProducts/AddPipes";
 import Sell from "./components/AdminSide/Sell";
+import Transaction from "./components/AdminSide/Transaction";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -55,9 +56,19 @@ function App() {
       path: "/",
       element: (
         <>
-          <NavBar isLoggedIn={isLoggedIn} username={username} />
-          <Home />
-          {/* <Alert alert={alert} /> */}
+          {authCheck ? (
+            <>
+              <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+              <Alert alert={alert} />
+              <AdminHome showAlert={showAlert} />
+            </>
+          ) : (
+            <>
+              <NavBar isLoggedIn={isLoggedIn} username={username} />
+              <Alert alert={alert} />
+              <Home showAlert={showAlert} />
+            </>
+          )}
         </>
       ),
     },
@@ -264,6 +275,16 @@ function App() {
           <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
           <Alert alert={alert} />
           <Sell showAlert={showAlert} />
+        </>
+      ),
+    },
+    {
+      path: "/Transaction",
+      element: (
+        <>
+          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+          <Alert alert={alert} />
+          <Transaction showAlert={showAlert} />
         </>
       ),
     },

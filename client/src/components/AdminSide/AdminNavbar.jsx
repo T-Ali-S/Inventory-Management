@@ -50,6 +50,11 @@ function AdminNavbar(props) {
                   Sell
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/Transaction">
+                  Transaction
+                </Link>
+              </li>
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
