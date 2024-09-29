@@ -39,6 +39,15 @@ function NavBar(props) {
                   Home
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link
+                  className="nav-link active"
+                  aria-current="page"
+                  to="/TrackOrder"
+                >
+                  TrackOrder
+                </Link>
+              </li>
             </ul>
             <form className="d-flex" role="search">
               {props.isLoggedIn ? (

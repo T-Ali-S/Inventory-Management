@@ -3,6 +3,7 @@ import { AuthAdmin } from "../authCheck_AC/authCheck";
 import { Link, useLocation } from "react-router-dom";
 import { FaCartShopping, FaPencil } from "react-icons/fa6";
 import { IoIosCheckboxOutline } from "react-icons/io";
+import { GrSubtractCircle } from "react-icons/gr";
 import axios from "axios";
 
 function Category(props) {
@@ -19,6 +20,15 @@ function Category(props) {
   const [selectedNumber, setSelectedNumber] = useState("");
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [selectedOption, setSelectedOption] = useState("credit");
+  //For Cart functionality
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false); // New cart modal state
+  const [quantity, setQuantity] = useState("");
+  const [mass, setMass] = useState("");
+  const [unit, setUnit] = useState("kg"); // Default unit
+  const [showCartModal, setShowCartModal] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isCartViewModalOpen, setIsCartViewModalOpen] = useState(false);
 
   const handleCheckboxChange = (option) => {
     setSelectedOption(option);
@@ -180,6 +190,144 @@ function Category(props) {
       // If error, keep the data in local storage
     }
   };
+  const handleDeselectProduct = (productIndex) => {
+    // Remove product from selectedProducts array
+    const updatedSelectedProducts = selectedProducts.filter(
+      (product, index) => index !== productIndex
+    );
+
+    // Update state
+    setSelectedProducts(updatedSelectedProducts);
+
+    // Update local storage
+    localStorage.setItem(
+      "selectedChannelData",
+      JSON.stringify(updatedSelectedProducts)
+    );
+  };
+
+  const openCartModal = (channel) => {
+    setSelectedChannel(channel);
+    setIsCartModalOpen(true);
+  };
+
+  const closeCartModal = () => {
+    setIsCartModalOpen(false);
+    setSelectedChannel(null);
+    setQuantity("");
+    setMass("");
+  };
+  const handleQuantityChange = (e) => {
+    setQuantity(e.target.value);
+  };
+
+  const handleMassChange = (e) => {
+    setMass(e.target.value);
+  };
+  const handlePhoneNumberChange = (e) => {
+    setPhoneNumber(e.target.value);
+  };
+  const handleUnitChange = (e) => {
+    setUnit(e.target.value);
+  };
+  const handleAddToCart = () => {
+    if (selectedChannel && quantity && mass) {
+      const cartData = {
+        ...selectedChannel,
+        quantity,
+        mass: `${mass} ${unit}`,
+      };
+
+      let existingCartData = localStorage.getItem("cartData");
+      let cartArray = [];
+
+      try {
+        cartArray = existingCartData ? JSON.parse(existingCartData) : [];
+      } catch (error) {
+        console.error("Error parsing localStorage data: ", error);
+        cartArray = [];
+      }
+
+      cartArray.push(cartData);
+      localStorage.setItem("cartData", JSON.stringify(cartArray));
+      closeCartModal();
+    }
+  };
+
+  const handleSeeCartClick = () => {
+    const storedCartItems = JSON.parse(localStorage.getItem("cartData")) || [];
+    setCartItems(storedCartItems);
+    setShowCartModal(true);
+  };
+  const closeShowCartModal = () => {
+    setShowCartModal(false); // Close the cart modal
+    setCartItems([]); // Optionally clear cart items or keep them as needed
+  };
+
+  const handleConfirmOrder = async () => {
+    if (phoneNumber && cartItems.length > 0) {
+      const orderDetails = cartItems.map((item) => ({
+        productName: "Channel",
+        length: item.length,
+        width: item.width,
+        weight: item.weight,
+        mass: item.mass,
+        price: item.price,
+        quantity: item.quantity,
+        orderDate: new Date().toISOString(),
+        customerName: props.username,
+        cellNumber: phoneNumber,
+      }));
+
+      try {
+        const response = await axios.post("http://localhost:4000/Orders", {
+          cart: orderDetails,
+          // phoneNumber,
+          // orderDetails,
+        });
+
+        if (response.status === 200) {
+          props.showAlert("Order Send to the Admin", "success");
+          localStorage.removeItem("cartData"); // Clear cart after confirming
+          setShowCartModal(false);
+        } else {
+          props.showAlert(
+            "Error confirming order. Please try again.",
+            "warning"
+          );
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        props.showAlert("Error confirming order. Please try again.", "warning");
+      }
+    } else {
+      props.showAlert(
+        "Please enter a phone number and add items to the cart.",
+        "warning"
+      );
+    }
+  };
+
+  const handleDeselectCartProduct = (productIndex) => {
+    // Remove the selected product from the cart
+    const updatedCartItems = cartItems.filter(
+      (_, index) => index !== productIndex
+    );
+
+    // Update state
+    setCartItems(updatedCartItems);
+
+    // Update local storage
+    localStorage.setItem("cartData", JSON.stringify(updatedCartItems));
+  };
+
+  const handleUserVerf = async (channel) => {
+    if (props.isLoggedIn === true) {
+      openCartModal(channel);
+    } else {
+      props.showAlert("Please Log-In to add the product to cart", "warning");
+    }
+  };
 
   useEffect(() => {
     fetchChannels();
@@ -251,7 +399,12 @@ function Category(props) {
                     )
                   ) : (
                     <td>
-                      <FaCartShopping className="text-success h4" />
+                      <FaCartShopping
+                        type="button"
+                        className="text-success h4"
+                        // onClick={() => openCartModal(channel)}
+                        onClick={() => handleUserVerf(channel)}
+                      />
                     </td>
                   )}
                 </tr>
@@ -274,7 +427,7 @@ function Category(props) {
         )}
 
         {/* Add the two buttons */}
-        {authCheck && (
+        {authCheck ? (
           <div className="d-grid gap-2 col-6 mx-auto">
             {showSelectOption ? (
               <button
@@ -293,6 +446,16 @@ function Category(props) {
                 Add Category
               </Link>
             )}
+          </div>
+        ) : (
+          <div className="d-grid gap-2 col-6 mx-auto">
+            <Link
+              type="button"
+              onClick={handleSeeCartClick}
+              className="btn btn-outline-success btn-lg text-center"
+            >
+              See Cart <FaCartShopping className="ms-2" />
+            </Link>
           </div>
         )}
       </div>
@@ -374,6 +537,7 @@ function Category(props) {
             className="modal-dialog"
             role="document"
             onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: "600px", width: "100%" }}
           >
             <div className="modal-content">
               <div className="modal-header">
@@ -384,11 +548,31 @@ function Category(props) {
                   <>
                     <ul>
                       {selectedProducts.map((product, index) => (
-                        <li key={index}>
-                          Length: {product.length}, Width: {product.width},
-                          Weight:
-                          {product.weight}, Quantity: {product.selectedNumber},
-                          Price: {product.selectedNumber * product.price}
+                        <li
+                          key={index}
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <span>
+                            Length: {product.length}, Width: {product.width},
+                            Weight:
+                            {product.weight}, Quantity: {product.selectedNumber}
+                            , Price: {product.selectedNumber * product.price}
+                          </span>
+                          <GrSubtractCircle
+                            type="button"
+                            className="h4 "
+                            style={{
+                              // textAlign: "left",
+                              // margin: "auto",
+                              marginLeft: "10px",
+                              marginTop: "5px",
+                              color: "red",
+                              // marginBottom: "20px",
+
+                              cursor: "pointer",
+                            }} // optional styles for spacing and pointer
+                            onClick={() => handleDeselectProduct(index)}
+                          />
                         </li>
                       ))}
                     </ul>
@@ -535,6 +719,172 @@ function Category(props) {
                     </button>
                   </div>
                 </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Cart */}
+      {isCartModalOpen && (
+        <div
+          className="modal fade show mt-4"
+          onClick={closeCartModal}
+          style={{
+            display: "block",
+            position: "fixed",
+            top: "55%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1050,
+          }}
+        >
+          <div
+            className="modal-dialog"
+            role="document"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-content">
+              <div className="modal-header ">
+                <h5 className="modal-title">Add to Cart</h5>
+              </div>
+              <div className="modal-body">
+                <div className="text-center">
+                  <input
+                    type="number"
+                    value={quantity}
+                    onChange={handleQuantityChange}
+                    className="m-3 border-2 p-2"
+                    placeholder="Enter Quantity"
+                    min="1"
+                    required
+                  />
+                  <input
+                    type="number"
+                    value={mass}
+                    onChange={handleMassChange}
+                    className="m-3 border-2 p-2"
+                    placeholder={`Weight (${unit})`}
+                    min="0"
+                    required
+                  />
+                  <select
+                    value={unit}
+                    onChange={handleUnitChange}
+                    className="m-3 border-2 p-2"
+                  >
+                    <option value="kg">Kilograms</option>
+                    <option value="g">Grams</option>
+                  </select>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={closeCartModal}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleAddToCart}
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cart viewing modal */}
+      {showCartModal && (
+        <div
+          className="modal fade show mt-4"
+          onClick={closeShowCartModal} // Function to close the modal
+          style={{
+            display: "block",
+            position: "fixed",
+            top: "55%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1050,
+          }}
+        >
+          <div
+            className="modal-dialog"
+            role="document"
+            onClick={(e) => e.stopPropagation()} // Prevent click on dialog from closing modal
+            style={{ maxWidth: "650px", width: "100%" }}
+          >
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Your Cart</h5>
+              </div>
+              <div className="modal-body">
+                {cartItems.length > 0 ? ( // Check if there are items in the cart
+                  <ul>
+                    {cartItems.map((item, index) => (
+                      <li
+                        key={index}
+                        style={{ display: "flex", alignItems: "center" }}
+                      >
+                        <span>
+                          Length: {item.length}, Width: {item.width}, Weight:{" "}
+                          {item.weight}, Mass: {item.mass}, Quantity:{" "}
+                          {item.quantity}, Price: {item.price}
+                        </span>
+                        {/* Deselect icon */}
+                        <GrSubtractCircle
+                          className="text-danger h4"
+                          onClick={() => handleDeselectCartProduct(index)}
+                          style={{
+                            marginLeft: "10px",
+                            marginTop: "5px",
+                            color: "red",
+
+                            cursor: "pointer",
+                          }}
+                        />
+                      </li>
+                    ))}
+                    <div className="text-center mt-5">
+                      <input
+                        type="text"
+                        className="text-center p-1"
+                        value={phoneNumber} // Controlled input for phone number
+                        onChange={handlePhoneNumberChange} // Update phone number in state
+                        placeholder="Enter your phone number"
+                        style={{
+                          marginTop: "10px",
+                          width: "50%",
+                        }}
+                      />
+                    </div>
+                  </ul>
+                ) : (
+                  <p className="h4 text-center">Your cart is empty.</p> // Message when there are no items
+                )}
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={closeShowCartModal} // Close button
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleConfirmOrder} // Confirm order button
+                >
+                  Confirm Order
+                </button>
               </div>
             </div>
           </div>

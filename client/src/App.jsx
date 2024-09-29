@@ -24,6 +24,7 @@ import AddAngleBar from "./components/AddSubProducts/AddAngleBar";
 import AddPipes from "./components/AddSubProducts/AddPipes";
 import Sell from "./components/AdminSide/Sell";
 import Transaction from "./components/AdminSide/Transaction";
+import TrackOrder from "./components/Client_Side/TrackOrder";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -160,7 +161,25 @@ function App() {
           )}
           {/* <NavBar isLoggedIn={isLoggedIn} username={username} /> */}
           <Alert alert={alert} />
-          <Category showAlert={showAlert} />
+          <Category
+            showAlert={showAlert}
+            isLoggedIn={isLoggedIn}
+            username={username}
+          />
+        </>
+      ),
+    },
+    {
+      path: "/TrackOrder",
+      element: (
+        <>
+          <NavBar isLooggrdIn={isLoggedIn} username={username} />
+          <Alert alert={alert} />
+          <TrackOrder
+            showAlert={showAlert}
+            isLoggedIn={isLoggedIn}
+            username={username}
+          />
         </>
       ),
     },

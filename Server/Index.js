@@ -12,6 +12,7 @@ const AngleIron = require("./Models/Iron");
 const AngleBar = require("./Models/Bar");
 const Pipes = require("./Models/Pipes");
 const Sale = require("./Models/Sales");
+const Orders = require("./Models/Order");
 
 app.get("/a", async (req, res) => {
   let users = await Users.find();
@@ -363,7 +364,7 @@ app.post("/editAngleIron", async (req, res) => {
   }
 });
 app.post("/editAngleBar", async (req, res) => {
-  const { _id, length, shape } = req.body;
+  const { _id, length, shape, price } = req.body;
   try {
     const angleBar = await AngleBar.findById(_id);
     if (!angleBar) {
@@ -372,6 +373,7 @@ app.post("/editAngleBar", async (req, res) => {
 
     angleBar.length = length || angleBar.length;
     angleBar.shape = shape || angleBar.shape;
+    angleBar.price = price || angleBar.price;
 
     await angleBar.save();
     res.send({ status: "Ok", data: "AngleBar Edited" });
@@ -444,6 +446,24 @@ app.get("/getFilterSales", async (req, res) => {
   } catch (error) {
     console.error("Error fetching sales:", error);
     res.status(500).send("Internal Server Error");
+  }
+});
+
+app.post("/Orders", async (req, res) => {
+  const cartData = req.body.cart;
+  if (!Array.isArray(cartData) || cartData.length === 0) {
+    return res.status(400).json({ message: "No cart data Provided" });
+  }
+  try {
+    const cartRecords = await Orders.insertMany(cartData);
+    res
+      .status(200)
+      .json({ message: "Order recorded successfully", cartRecords });
+  } catch (error) {
+    console.error("Error saving sales data: ", error);
+    res
+      .status(500)
+      .json({ message: "Error saving sales data", error: error.message });
   }
 });
 

@@ -3,6 +3,7 @@ import { AuthAdmin } from "../authCheck_AC/authCheck";
 import { Link, useLocation } from "react-router-dom";
 import { FaCartShopping, FaPencil } from "react-icons/fa6";
 import { IoIosCheckboxOutline } from "react-icons/io"; // Correct import
+import { GrSubtractCircle } from "react-icons/gr";
 import axios from "axios";
 
 function Cate_AngleIron(props) {
@@ -195,6 +196,22 @@ function Cate_AngleIron(props) {
 
   const handleNumberChange = (e) => {
     setSelectedNumber(e.target.value);
+  };
+
+  const handleDeselectProduct = (productIndex) => {
+    // Remove product from selectedProducts array
+    const updatedSelectedProducts = selectedProducts.filter(
+      (product, index) => index !== productIndex
+    );
+
+    // Update state
+    setSelectedProducts(updatedSelectedProducts);
+
+    // Update local storage
+    localStorage.setItem(
+      "selectedAngleIronData",
+      JSON.stringify(updatedSelectedProducts)
+    );
   };
 
   useEffect(() => {
@@ -457,6 +474,7 @@ function Cate_AngleIron(props) {
             className="modal-dialog"
             role="document"
             onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: "600px", width: "100%" }}
           >
             <div className="modal-content">
               <div className="modal-header">
@@ -467,10 +485,30 @@ function Cate_AngleIron(props) {
                   <>
                     <ul>
                       {selectedProducts.map((product, index) => (
-                        <li key={index}>
-                          Length: {product.length}, Width: {product.width}, ,
-                          Quantity: {product.selectedNumber}, Price:{" "}
-                          {product.selectedNumber * product.price}
+                        <li
+                          key={index}
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <span>
+                            Length: {product.length}, Width: {product.width}, ,
+                            Quantity: {product.selectedNumber}, Price:{" "}
+                            {product.selectedNumber * product.price}
+                          </span>
+                          <GrSubtractCircle
+                            type="button"
+                            className="h4 "
+                            style={{
+                              // textAlign: "left",
+                              // margin: "auto",
+                              marginLeft: "10px",
+                              marginTop: "5px",
+                              color: "red",
+                              // marginBottom: "20px",
+
+                              cursor: "pointer",
+                            }} // optional styles for spacing and pointer
+                            onClick={() => handleDeselectProduct(index)}
+                          />
                         </li>
                       ))}
                     </ul>

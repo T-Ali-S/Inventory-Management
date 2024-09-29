@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { IoIosArrowBack } from "react-icons/io";
+import { useNavigate, Link } from "react-router-dom";
 
 function AddPipes(props) {
   // Make sure to pass props here
@@ -58,8 +60,18 @@ function AddPipes(props) {
 
   return (
     <>
-      <div className=" text-center border-2 m-5">
-        <p className="h3 m-3">Add Pipes</p>
+      <div className=" text-center border-2 mt-5">
+        <div className="d-flex justify-content-center">
+          <div className="row text-center">
+            <div className="col-auto text-primary">
+              <Link to="/Cate_AngleIron">
+                <IoIosArrowBack className="h4 mt-1" type="button" />
+              </Link>
+            </div>
+            <div className="h3 col-auto">Add AngleIron</div>{" "}
+            {/* Removed me-5 */}
+          </div>
+        </div>
         <form onSubmit={collectData} className="">
           <div className="mb-3 mt-5">
             <input
