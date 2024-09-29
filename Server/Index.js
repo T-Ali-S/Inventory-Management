@@ -70,6 +70,26 @@ app.get("/getSales", async (req, res) => {
   }
 });
 
+app.get("/customerOrders/:username", async (req, res) => {
+  const { username } = req.params;
+  console.log("Fetching orders for username:", username); // Log the username
+
+  try {
+    const orders = await Orders.find({ customerName: username });
+    console.log("Orders fetched:", orders); // Log the fetched orders
+
+    if (orders.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No orders found for this user." });
+    }
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching orders:", error); // Log errors
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   Users.findOne({ email: email }).then((user) => {

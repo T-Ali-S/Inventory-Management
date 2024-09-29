@@ -836,7 +836,7 @@ function Category(props) {
                         <span>
                           Length: {item.length}, Width: {item.width}, Weight:{" "}
                           {item.weight}, Mass: {item.mass}, Quantity:{" "}
-                          {item.quantity}, Price: {item.price}
+                          {item.quantity}, Price: {item.price * item.quantity}
                         </span>
                         {/* Deselect icon */}
                         <GrSubtractCircle

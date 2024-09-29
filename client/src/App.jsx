@@ -173,7 +173,7 @@ function App() {
       path: "/TrackOrder",
       element: (
         <>
-          <NavBar isLooggrdIn={isLoggedIn} username={username} />
+          <NavBar isLoggedIn={isLoggedIn} username={username} />
           <Alert alert={alert} />
           <TrackOrder
             showAlert={showAlert}
