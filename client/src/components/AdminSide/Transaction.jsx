@@ -84,12 +84,12 @@ function Transaction() {
         <div className="text-center h1 mt-5">Sales</div>
 
         {/* Dropdown Filters */}
-        <div className="row my-4">
-          <div className="col-md-2">
+        <div className="row m-4 ">
+          <div className="col-md-2 ">
             <select
               name="day"
               onChange={handleFilterChange}
-              className="form-control"
+              className="form-control text-center"
             >
               <option value="">Select Day</option>
               {days.map((day) => (
@@ -104,7 +104,7 @@ function Transaction() {
             <select
               name="month"
               onChange={handleFilterChange}
-              className="form-control"
+              className="form-control text-center"
             >
               <option value="">Select Month</option>
               {months.map((month, index) => (
@@ -119,7 +119,7 @@ function Transaction() {
             <select
               name="year"
               onChange={handleFilterChange}
-              className="form-control"
+              className="form-control text-center"
             >
               <option value="">Select Year</option>
               {years.map((year) => (
@@ -134,7 +134,7 @@ function Transaction() {
             <select
               name="productName"
               onChange={handleFilterChange}
-              className="form-control"
+              className="form-control text-center"
             >
               <option value="">Select Product</option>
               {productNames.map((product) => (
@@ -145,11 +145,11 @@ function Transaction() {
             </select>
           </div>
 
-          <div className="col-md-3">
+          <div className="col-md-3 ">
             <select
               name="paymentType"
               onChange={handleFilterChange}
-              className="form-control"
+              className="form-control text-center"
             >
               <option value="">Select Payment Type</option>
               {paymentTypes.map((type) => (
@@ -163,7 +163,7 @@ function Transaction() {
 
         {/* Sales Table */}
         {sales.length > 0 ? (
-          <table className="table table-hover border text-center">
+          <table className="table  table-hover border text-center">
             <thead>
               <tr>
                 <th>Customer Name</th>
