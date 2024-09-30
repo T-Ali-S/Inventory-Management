@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { MdDelete } from "react-icons/md";
 import { AuthAdmin } from "../authCheck_AC/authCheck";
 
 import axios from "axios";
@@ -147,10 +148,12 @@ const TrackOrder = ({ username }) => {
                 {authCheck && (
                   <div className="text-center mt-3">
                     <button
-                      className="btn btn-danger"
+                      className="btn btn-outline-danger"
                       onClick={() => handleDelete(order._id)}
                     >
                       Delete Order
+                      {/* <MdDelete className="h5 mt-1 ms-2" /> */}
+                      <MdDelete className="h3 ms-2 mt-1" />
                     </button>
                   </div>
                 )}
