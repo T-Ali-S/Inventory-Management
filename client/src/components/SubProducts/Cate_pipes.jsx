@@ -137,7 +137,7 @@ function Cate_pipes(props) {
       JSON.parse(localStorage.getItem("selectedPipesData")) || [];
 
     const salesData = selectedData.map((product) => ({
-      name: product.name || "Pipes",
+      productName: "Pipes",
       length: product.length,
       width: product.width,
       guage: product.guage,

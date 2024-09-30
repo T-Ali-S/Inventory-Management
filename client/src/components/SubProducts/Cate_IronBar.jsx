@@ -28,6 +28,9 @@ function IronBarCategory(props) {
     setSelectedAngleBar(angleBar);
     setIsModalOpen(true);
   };
+  const handleCheckboxChange = (option) => {
+    setSelectedOption(option);
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);

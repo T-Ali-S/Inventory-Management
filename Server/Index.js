@@ -475,7 +475,7 @@ app.get("/getFilterSales", async (req, res) => {
 
     // Add product name filter if provided
     if (productName) {
-      match.name = productName;
+      match.productName = productName;
     }
 
     // Add payment type filter if provided

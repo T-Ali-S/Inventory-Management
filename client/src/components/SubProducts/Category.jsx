@@ -12,6 +12,7 @@ function Category(props) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
+  const [custName, setCustName] = useState("");
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const showSelectOption = location.state?.showSelectOption || false;
@@ -98,6 +99,7 @@ function Category(props) {
   const closeSellModal = () => {
     setIsSellModalOpen(false);
     setSelectedProducts([]);
+    setCustName([]);
   };
 
   const inputChangeHandler = (e) => {
@@ -156,7 +158,8 @@ function Category(props) {
       JSON.parse(localStorage.getItem("selectedChannelData")) || [];
 
     const salesData = selectedData.map((product) => ({
-      name: product.name || "Channel",
+      productName: "Channel",
+      custName: custName,
       length: product.length,
       width: product.width,
       weight: product.weight,
@@ -540,8 +543,10 @@ function Category(props) {
             style={{ maxWidth: "600px", width: "100%" }}
           >
             <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Selected Products for Sale</h5>
+              <div className="modal-header  ">
+                <div className="modal-title h4 text-center">
+                  Selected Products for Sale
+                </div>
               </div>
               <div className="modal-body">
                 {selectedProducts.length > 0 ? (
@@ -576,7 +581,11 @@ function Category(props) {
                         </li>
                       ))}
                     </ul>
+                    <hr />
                     <div>
+                      <div className="h4 text-center">
+                        Choose Payment options
+                      </div>
                       <div className="form-check">
                         <input
                           className="form-check-input"
@@ -605,6 +614,19 @@ function Category(props) {
                         <label className="form-check-label" htmlFor="check2">
                           Cash
                         </label>
+                      </div>
+                      <hr />
+                      <div className="m-2 text-center">
+                        <div className="h4 mb-4">Enter Customer Name</div>
+                        <input
+                          type="text"
+                          name="custName"
+                          value={custName}
+                          required
+                          onChange={(e) => setCustName(e.target.value)}
+                          className="p-1 rounded-pill text-center"
+                          placeholder="Enter Name"
+                        />
                       </div>
                     </div>
                   </>

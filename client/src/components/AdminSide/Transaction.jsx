@@ -14,6 +14,7 @@ function Transaction() {
   const months = [
     "January",
     "February",
+    "March",
     "April",
     "May",
     "June",
@@ -54,6 +55,28 @@ function Transaction() {
       [name]: value,
     }));
   };
+
+  // Check if each column should be displayed (not entirely empty)
+  // const hasWeight = sales.some(
+  //   (sale) => sale.weight && sale.weight.trim() !== ""
+  // );
+  // Check if each column should be displayed (not entirely empty)
+  const hasProductName = sales.some(
+    (sale) => sale.productName && sale.productName.trim() !== ""
+  );
+  const hasLength = sales.some(
+    (sale) => sale.length && sale.length.toString().trim() !== ""
+  );
+  const hasWidth = sales.some(
+    (sale) => sale.width && sale.width.toString().trim() !== ""
+  );
+  const hasWeight = sales.some(
+    (sale) => sale.weight && sale.weight.toString().trim() !== ""
+  );
+  const hasShape = sales.some((sale) => sale.shape && sale.shape.trim() !== "");
+  const hasGuage = sales.some(
+    (sale) => sale.guage && sale.guage.toString().trim() !== ""
+  );
 
   return (
     <>
@@ -143,12 +166,13 @@ function Transaction() {
           <table className="table table-hover border text-center">
             <thead>
               <tr>
-                <th>Product Name</th>
-                <th>Length</th>
-                <th>Width</th>
-                <th>Weight</th>
-                <th>Shape</th>
-                <th>Guage</th>
+                <th>Customer Name</th>
+                {hasProductName && <th>Product Name</th>}
+                {hasLength && <th>Length</th>}
+                {hasWidth && <th>Width</th>}
+                {hasWeight && <th>Weight</th>}
+                {hasShape && <th>Shape</th>}
+                {hasGuage && <th>Guage</th>}
                 <th>Date</th>
                 <th>Price</th>
                 <th>Payment Type</th>
@@ -157,12 +181,13 @@ function Transaction() {
             <tbody>
               {sales.map((sale) => (
                 <tr key={sale._id}>
-                  <td>{sale.name}</td>
-                  <td>{sale.length}</td>
-                  <td>{sale.width}</td>
-                  <td>{sale.weight !== null ? sale.weight : "N/A"}</td>
-                  <td>{sale.shape !== null ? sale.shape : "N/A"}</td>
-                  <td>{sale.guage !== null ? sale.guage : "N/A"}</td>
+                  <td>{sale.custName}</td>
+                  {hasProductName && <td>{sale.productName || "N/A"}</td>}
+                  {hasLength && <td>{sale.length || "N/A"}</td>}
+                  {hasWidth && <td>{sale.width || "N/A"}</td>}
+                  {hasWeight && <td>{sale.weight || "N/A"}</td>}
+                  {hasShape && <td>{sale.shape || "N/A"}</td>}
+                  {hasGuage && <td>{sale.guage || "N/A"}</td>}
                   <td>{new Date(sale.date).toLocaleDateString()}</td>
                   <td>{sale.price}</td>
                   <td>{sale.paymentType}</td>
