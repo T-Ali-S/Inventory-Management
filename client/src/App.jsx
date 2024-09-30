@@ -24,7 +24,7 @@ import AddAngleBar from "./components/AddSubProducts/AddAngleBar";
 import AddPipes from "./components/AddSubProducts/AddPipes";
 import Sell from "./components/AdminSide/Sell";
 import Transaction from "./components/AdminSide/Transaction";
-import TrackOrder from "./components/Client_Side/TrackOrder";
+import TrackOrder from "./components/common_file/TrackOrder";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -39,7 +39,7 @@ function App() {
     });
     setTimeout(() => {
       setAlert(null);
-    }, 1500);
+    }, 2500);
   };
 
   useEffect(() => {
@@ -173,7 +173,11 @@ function App() {
       path: "/TrackOrder",
       element: (
         <>
-          <NavBar isLoggedIn={isLoggedIn} username={username} />
+          {authCheck ? (
+            <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+          ) : (
+            <NavBar isLoggedIn={isLoggedIn} username={username} />
+          )}
           <Alert alert={alert} />
           <TrackOrder
             showAlert={showAlert}

@@ -34,7 +34,7 @@ function Login(props) {
       <form onSubmit={handleSubmit}>
         <div className="border-2 m-5 text-center">
           <div className="mt-5">
-            <p className="text-2xl font-bold">Login Form</p>
+            <p className="h2">Login Form</p>
           </div>
           <div className="mt-5">
             <input
@@ -42,7 +42,7 @@ function Login(props) {
               value={email}
               placeholder="Enter Email Address"
               onChange={(e) => setEmail(e.target.value)}
-              className="border-2 border-gray-700 p-2"
+              className="border-2 text-center rounded-pill p-2"
               required
             />
           </div>
@@ -52,20 +52,23 @@ function Login(props) {
               value={password}
               placeholder="Enter Password"
               onChange={(e) => setPassword(e.target.value)}
-              className="border-2 border-gray-700 p-2"
+              className="border-2 rounded-pill text-center p-2"
               required
             />
           </div>
           <div className="mt-3">
-            <Link to="/Signup">Create an Account</Link>
+            <Link to="/Signup" className=" text-decoration-none">
+              Create an Account
+            </Link>
           </div>
           <div className="mt-3">
-            <Link to="/Adminlogin">Admin Login</Link>
+            <Link to="/Adminlogin" className=" text-decoration-none">
+              Admin Login
+            </Link>
           </div>
-          <br />
           <button
             type="submit" // Ensure the button submits the form
-            className="mb-3  ml-2 bg-green-600 border-2 hover:bg-green-700 text-black p-2"
+            className="btn btn-outline-success btn-lg text-center"
           >
             Submit
           </button>

@@ -70,13 +70,40 @@ app.get("/getSales", async (req, res) => {
   }
 });
 
+app.get("/getCustOrderInfo", async (req, res) => {
+  try {
+    const orders = await Orders.find();
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("Error fetching Customer Orders: ", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.delete("/deleteOrder/:id", async (req, res) => {
+  const orderId = req.params.id;
+
+  try {
+    // Find the order by ID and delete it
+    const order = await Orders.findByIdAndDelete(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.json({ message: "Order deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 app.get("/customerOrders/:username", async (req, res) => {
   const { username } = req.params;
-  console.log("Fetching orders for username:", username); // Log the username
+  // console.log("Fetching orders for username:", username); // Log the username
 
   try {
     const orders = await Orders.find({ customerName: username });
-    console.log("Orders fetched:", orders); // Log the fetched orders
+    // console.log("Orders fetched:", orders); // Log the fetched orders
 
     if (orders.length === 0) {
       return res
