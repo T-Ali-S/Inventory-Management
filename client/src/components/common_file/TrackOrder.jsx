@@ -101,50 +101,69 @@ const TrackOrder = ({ username }) => {
       ) : (
         <ul>
           {orderData.map((order) => (
-            <div className="border m-2 ">
-              <li key={order._id} className="m-2">
-                {authCheck && (
+            <div className="border m-2 " key={order._id}>
+              <li className="m-2">
+                {authCheck && order.customerName && (
                   <div className="row">
-                    {/* <strong className="col">Customer Name:</strong> */}
-                    <p className="text-uppercase  text-center col h4">
+                    <p className="text-uppercase text-center col h4">
                       {order.customerName}
                     </p>
                   </div>
                 )}
 
-                <p>
-                  <strong>Order Date:</strong>{" "}
-                  {new Date(order.date).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Product Name:</strong> {order.productName}
-                </p>
-                <p>
-                  <strong>Quantity:</strong> {order.quantity} pcs
-                </p>
-                <p>
-                  <strong>Length:</strong> {order.length}
-                </p>
-                <p>
-                  <strong>Width:</strong> {order.width}
-                </p>
-                <p>
-                  <strong>Weight:</strong> {order.weight}
-                </p>
-                <p>
-                  <strong>Mass:</strong> {order.mass}
-                </p>
-                <p>
-                  <strong>Price:</strong> {order.price}
-                </p>
-                <p>
-                  <strong>Cell Number:</strong> {order.cellNumber}
-                </p>
+                {order.date && (
+                  <p>
+                    <strong>Order Date:</strong>{" "}
+                    {new Date(order.date).toLocaleDateString()}
+                  </p>
+                )}
+                {order.productName && (
+                  <p>
+                    <strong>Product Name:</strong> {order.productName}
+                  </p>
+                )}
+                {order.quantity && (
+                  <p>
+                    <strong>Quantity:</strong> {order.quantity} pcs
+                  </p>
+                )}
+                {order.length && (
+                  <p>
+                    <strong>Length:</strong> {order.length}
+                  </p>
+                )}
+                {order.width && (
+                  <p>
+                    <strong>Width:</strong> {order.width}
+                  </p>
+                )}
+                {order.weight && (
+                  <p>
+                    <strong>Weight:</strong> {order.weight}
+                  </p>
+                )}
+                {order.mass && order.quantity && (
+                  <p>
+                    <strong>Mass:</strong> {order.mass * order.quantity} KG
+                  </p>
+                )}
+                {order.price && (
+                  <p>
+                    <strong>Price:</strong> {order.price}
+                  </p>
+                )}
+                {order.cellNumber && (
+                  <p>
+                    <strong>Cell Number:</strong> {order.cellNumber}
+                  </p>
+                )}
+
                 {!authCheck && (
                   <div className="text-center h4 text-success">
                     <strong>We will notify you on your Order Shortly</strong>
                   </div>
                 )}
+
                 {authCheck && (
                   <div className="text-center mt-3">
                     <button
@@ -152,7 +171,6 @@ const TrackOrder = ({ username }) => {
                       onClick={() => handleDelete(order._id)}
                     >
                       Delete Order
-                      {/* <MdDelete className="h5 mt-1 ms-2" /> */}
                       <MdDelete className="h4 ms-2 mt-1 " />
                     </button>
                   </div>

@@ -4,6 +4,7 @@ const UsersSchema = new mongoose.Schema({
   name: String,
   length: String,
   width: String,
+  mass: String,
   price: String,
 });
 

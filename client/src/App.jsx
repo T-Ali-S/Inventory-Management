@@ -151,25 +151,6 @@ function App() {
       ),
     },
     {
-      path: "/Category",
-      element: (
-        <>
-          {authCheck ? (
-            <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
-          ) : (
-            <NavBar isLoggedIn={isLoggedIn} username={username} />
-          )}
-          {/* <NavBar isLoggedIn={isLoggedIn} username={username} /> */}
-          <Alert alert={alert} />
-          <Category
-            showAlert={showAlert}
-            isLoggedIn={isLoggedIn}
-            username={username}
-          />
-        </>
-      ),
-    },
-    {
       path: "/TrackOrder",
       element: (
         <>
@@ -249,7 +230,30 @@ function App() {
             <NavBar isLoggedIn={isLoggedIn} username={username} />
           )}
           <Alert alert={alert} />
-          <Cate_AngleIron showAlert={showAlert} />
+          <Cate_AngleIron
+            showAlert={showAlert}
+            isLoggedIn={isLoggedIn}
+            username={username}
+          />
+        </>
+      ),
+    },
+    {
+      path: "/Category",
+      element: (
+        <>
+          {authCheck ? (
+            <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+          ) : (
+            <NavBar isLoggedIn={isLoggedIn} username={username} />
+          )}
+          {/* <NavBar isLoggedIn={isLoggedIn} username={username} /> */}
+          <Alert alert={alert} />
+          <Category
+            showAlert={showAlert}
+            isLoggedIn={isLoggedIn}
+            username={username}
+          />
         </>
       ),
     },
@@ -263,7 +267,11 @@ function App() {
             <NavBar isLoggedIn={isLoggedIn} username={username} />
           )}
           <Alert alert={alert} />
-          <Cate_IronBar showAlert={showAlert} />
+          <Cate_IronBar
+            showAlert={showAlert}
+            isLoggedIn={isLoggedIn}
+            username={username}
+          />
         </>
       ),
     },
@@ -277,7 +285,11 @@ function App() {
             <NavBar isLoggedIn={isLoggedIn} username={username} />
           )}
           <Alert alert={alert} />
-          <Cate_pipes showAlert={showAlert} />
+          <Cate_pipes
+            showAlert={showAlert}
+            isLoggedIn={isLoggedIn}
+            username={username}
+          />
         </>
       ),
     },

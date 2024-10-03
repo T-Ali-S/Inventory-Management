@@ -8,6 +8,7 @@ function AddChannel(props) {
   const [length, setLength] = useState("");
   const [width, setWidth] = useState("");
   const [weight, setWeight] = useState("");
+  const [mass, setMass] = useState("");
   const [price, setPrice] = useState("");
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ function AddChannel(props) {
         length,
         width,
         weight,
+        mass,
         price,
       });
 
@@ -31,6 +33,7 @@ function AddChannel(props) {
             length,
             width,
             weight,
+            mass,
             price,
           }
         );
@@ -45,6 +48,7 @@ function AddChannel(props) {
           setLength("");
           setWeight("");
           setWidth("");
+          setMass("");
           setPrice("");
         } else {
           props.showAlert("Unexpected response from server", "warning");
@@ -103,6 +107,15 @@ function AddChannel(props) {
               value={weight}
               placeholder="Enter weight"
               onChange={(e) => setWeight(e.target.value)}
+              required
+            />
+            <br />
+            <input
+              type="text"
+              className="form-label border-2 m-1 border-gray-700 p-2"
+              value={mass}
+              placeholder="Enter Mass"
+              onChange={(e) => setMass(e.target.value)}
               required
             />
             <br />

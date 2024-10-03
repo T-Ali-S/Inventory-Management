@@ -24,7 +24,7 @@ function Category(props) {
   //For Cart functionality
   const [isCartModalOpen, setIsCartModalOpen] = useState(false); // New cart modal state
   const [quantity, setQuantity] = useState("");
-  const [mass, setMass] = useState("");
+  // const [mass, setMass] = useState("");
   const [unit, setUnit] = useState("kg"); // Default unit
   const [showCartModal, setShowCartModal] = useState(false);
   const [cartItems, setCartItems] = useState([]);
@@ -132,6 +132,7 @@ function Category(props) {
         length: selectedChannel.length,
         width: selectedChannel.width,
         weight: selectedChannel.weight,
+        mass: selectedChannel.mass,
         price: selectedChannel.price,
       });
 
@@ -159,7 +160,7 @@ function Category(props) {
 
     const salesData = selectedData.map((product) => ({
       productName: "Channel",
-      custName: custName,
+      custName: custName || "Walk In",
       length: product.length,
       width: product.width,
       weight: product.weight,
@@ -218,15 +219,14 @@ function Category(props) {
     setIsCartModalOpen(false);
     setSelectedChannel(null);
     setQuantity("");
-    setMass("");
   };
   const handleQuantityChange = (e) => {
     setQuantity(e.target.value);
   };
 
-  const handleMassChange = (e) => {
-    setMass(e.target.value);
-  };
+  // const handleMassChange = (e) => {
+  //   setMass(e.target.value);
+  // };
   const handlePhoneNumberChange = (e) => {
     setPhoneNumber(e.target.value);
   };
@@ -234,11 +234,15 @@ function Category(props) {
     setUnit(e.target.value);
   };
   const handleAddToCart = () => {
-    if (selectedChannel && quantity && mass) {
+    if (
+      selectedChannel &&
+      quantity
+      // && mass
+    ) {
       const cartData = {
         ...selectedChannel,
         quantity,
-        mass: `${mass} ${unit}`,
+        // mass: `${mass} ${unit}`,
       };
 
       let existingCartData = localStorage.getItem("cartData");
@@ -361,6 +365,7 @@ function Category(props) {
                 <th>Length</th>
                 <th>Width</th>
                 <th>Weight</th>
+                <th>Mass</th>
                 <th>Price</th>
                 {authCheck ? (
                   showSelectOption ? (
@@ -380,6 +385,7 @@ function Category(props) {
                   <td>{channel.length}</td>
                   <td>{channel.width}</td>
                   <td>{channel.weight}</td>
+                  <td>{channel.mass} KG</td>
                   <td>{channel.price}</td>
 
                   {authCheck ? (
@@ -711,6 +717,15 @@ function Category(props) {
                     <br />
                     <input
                       type="text"
+                      name="mass"
+                      value={selectedChannel?.mass || ""}
+                      className="m-3 border-2 p-2"
+                      placeholder="Enter Channel mass"
+                      onChange={inputChangeHandler}
+                    />
+                    <br />
+                    <input
+                      type="text"
                       name="price"
                       value={selectedChannel?.price || ""}
                       className="m-3 border-2 p-2"
@@ -727,6 +742,7 @@ function Category(props) {
                         !selectedChannel?.length ||
                         !selectedChannel?.width ||
                         !selectedChannel?.price ||
+                        !selectedChannel?.mass ||
                         !selectedChannel?.weight
                       }
                     >
@@ -782,7 +798,7 @@ function Category(props) {
                     min="1"
                     required
                   />
-                  <input
+                  {/* <input
                     type="number"
                     value={mass}
                     onChange={handleMassChange}
@@ -790,14 +806,14 @@ function Category(props) {
                     placeholder={`Weight (${unit})`}
                     min="0"
                     required
-                  />
+                  /> */}
                   <select
                     value={unit}
                     onChange={handleUnitChange}
                     className="m-3 border-2 p-2"
                   >
                     <option value="kg">Kilograms</option>
-                    <option value="g">Grams</option>
+                    {/* <option value="g">Grams</option> */}
                   </select>
                 </div>
               </div>
@@ -857,8 +873,9 @@ function Category(props) {
                       >
                         <span>
                           Length: {item.length}, Width: {item.width}, Weight:{" "}
-                          {item.weight}, Mass: {item.mass}, Quantity:{" "}
-                          {item.quantity}, Price: {item.price * item.quantity}
+                          {item.weight}, Mass: {item.mass * item.quantity} KG,
+                          Quantity: {item.quantity}, Price:{" "}
+                          {item.price * item.quantity}
                         </span>
                         {/* Deselect icon */}
                         <GrSubtractCircle

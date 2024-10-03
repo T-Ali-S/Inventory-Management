@@ -17,12 +17,15 @@ function Cate_AngleIron(props) {
   const [selectedOption, setSelectedOption] = useState("credit");
   const [selectedNumber, setSelectedNumber] = useState("");
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const [selectedAngleIron, setSelectedAngleIron] = useState({
-    _id: "",
-    length: "",
-    width: "",
-    price: "",
-  });
+  const [selectedAngleIron, setSelectedAngleIron] = useState(null);
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false); // New cart modal state
+  const [quantity, setQuantity] = useState("");
+  const [unit, setUnit] = useState("kg"); // Default unit
+  const [showCartModal, setShowCartModal] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isCartViewModalOpen, setIsCartViewModalOpen] = useState(false);
+  const [custName, setCustName] = useState("");
 
   const handleCheckboxChange = (option) => {
     setSelectedOption(option);
@@ -160,7 +163,8 @@ function Cate_AngleIron(props) {
       JSON.parse(localStorage.getItem("selectedAngleIronData")) || [];
 
     const salesData = selectedData.map((product) => ({
-      name: product.name || "AngleIron",
+      productName: "AngleIron",
+      custName: custName || "Walk In",
       length: product.length,
       width: product.width,
       quantity: product.selectedNumber,
@@ -214,6 +218,131 @@ function Cate_AngleIron(props) {
     );
   };
 
+  //Cart Functionality
+  const handleUserVerf = async (angleIron) => {
+    if (props.isLoggedIn === true) {
+      openCartModal(angleIron);
+    } else {
+      props.showAlert("Please Log-In to add the product to cart", "warning");
+    }
+  };
+  const openCartModal = (angleIron) => {
+    setSelectedAngleIron(angleIron);
+    setIsCartModalOpen(true);
+  };
+  const closeCartModal = () => {
+    setIsCartModalOpen(false);
+    setSelectedAngleIron(null);
+    setQuantity("");
+  };
+
+  const handleAddToCart = () => {
+    if (
+      selectedAngleIron &&
+      quantity
+      // && mass
+    ) {
+      const cartData = {
+        ...selectedAngleIron,
+        quantity,
+        // mass: `${mass} ${unit}`,
+      };
+
+      let existingCartData = localStorage.getItem("cartData");
+      let cartArray = [];
+
+      try {
+        cartArray = existingCartData ? JSON.parse(existingCartData) : [];
+      } catch (error) {
+        console.error("Error parsing localStorage data: ", error);
+        cartArray = [];
+      }
+
+      cartArray.push(cartData);
+      localStorage.setItem("cartData", JSON.stringify(cartArray));
+      closeCartModal();
+    }
+  };
+
+  const handleSeeCartClick = () => {
+    const storedCartItems = JSON.parse(localStorage.getItem("cartData")) || [];
+    setCartItems(storedCartItems);
+    setShowCartModal(true);
+  };
+
+  const closeShowCartModal = () => {
+    setShowCartModal(false); // Close the cart modal
+    setCartItems([]); // Optionally clear cart items or keep them as needed
+  };
+
+  const handleQuantityChange = (e) => {
+    setQuantity(e.target.value);
+  };
+
+  const handleDeselectCartProduct = (productIndex) => {
+    // Remove the selected product from the cart
+    const updatedCartItems = cartItems.filter(
+      (_, index) => index !== productIndex
+    );
+
+    // Update state
+    setCartItems(updatedCartItems);
+
+    // Update local storage
+    localStorage.setItem("cartData", JSON.stringify(updatedCartItems));
+  };
+
+  const handleUnitChange = (e) => {
+    setUnit(e.target.value);
+  };
+
+  const handlePhoneNumberChange = (e) => {
+    setPhoneNumber(e.target.value);
+  };
+
+  const handleConfirmOrder = async () => {
+    if (phoneNumber && cartItems.length > 0) {
+      const orderDetails = cartItems.map((item) => ({
+        productName: "AngleIron",
+        length: item.length,
+        width: item.width,
+        mass: item.mass,
+        price: item.price,
+        quantity: item.quantity,
+        orderDate: new Date().toISOString(),
+        customerName: props.username,
+        cellNumber: phoneNumber,
+      }));
+
+      try {
+        const response = await axios.post("http://localhost:4000/Orders", {
+          cart: orderDetails,
+          // phoneNumber,
+          // orderDetails,
+        });
+
+        if (response.status === 200) {
+          props.showAlert("Order Send to the Admin", "success");
+          localStorage.removeItem("cartData"); // Clear cart after confirming
+          setShowCartModal(false);
+        } else {
+          props.showAlert(
+            "Error confirming order. Please try again.",
+            "warning"
+          );
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        props.showAlert("Error confirming order. Please try again.", "warning");
+      }
+    } else {
+      props.showAlert(
+        "Please enter a phone number and add items to the cart.",
+        "warning"
+      );
+    }
+  };
+
   useEffect(() => {
     fetchAngleIrons();
   }, []);
@@ -229,6 +358,7 @@ function Cate_AngleIron(props) {
                 <th>S.no</th>
                 <th>Length</th>
                 <th>Width</th>
+                <th>Mass</th>
                 <th>Price</th>
                 {authCheck ? (
                   showSelectOption ? (
@@ -247,6 +377,7 @@ function Cate_AngleIron(props) {
                   <td>{index + 1}</td>
                   <td>{AngleIron.length}</td>
                   <td>{AngleIron.width}</td>
+                  <td>{AngleIron.mass} KG</td>
                   <td>{AngleIron.price}</td>
 
                   {authCheck ? (
@@ -268,7 +399,11 @@ function Cate_AngleIron(props) {
                     )
                   ) : (
                     <td>
-                      <FaCartShopping className="text-success h4" />
+                      <FaCartShopping
+                        className="text-success h4"
+                        type="button"
+                        onClick={() => handleUserVerf(AngleIron)}
+                      />
                     </td>
                   )}
                 </tr>
@@ -290,7 +425,7 @@ function Cate_AngleIron(props) {
           </div>
         )}
 
-        {authCheck && (
+        {authCheck ? (
           <div className="d-grid gap-2 col-6 mx-auto">
             {showSelectOption ? (
               <button
@@ -309,6 +444,16 @@ function Cate_AngleIron(props) {
                 Add Category
               </Link>
             )}
+          </div>
+        ) : (
+          <div className="d-grid gap-2 col-6 mx-auto">
+            <Link
+              type="button"
+              onClick={handleSeeCartClick}
+              className="btn btn-outline-success btn-lg text-center"
+            >
+              See Cart <FaCartShopping className="ms-2" />
+            </Link>
           </div>
         )}
       </div>
@@ -512,7 +657,11 @@ function Cate_AngleIron(props) {
                         </li>
                       ))}
                     </ul>
+                    <hr />
                     <div>
+                      <div className="h4 text-center">
+                        Choose Payment options
+                      </div>
                       <div className="form-check">
                         <input
                           className="form-check-input"
@@ -542,6 +691,19 @@ function Cate_AngleIron(props) {
                           Cash
                         </label>
                       </div>
+                      <hr />
+                      <div className="m-2 text-center">
+                        <div className="h4 mb-4">Enter Customer Name</div>
+                        <input
+                          type="text"
+                          name="custName"
+                          value={custName}
+                          required
+                          onChange={(e) => setCustName(e.target.value)}
+                          className="p-1 rounded-pill text-center"
+                          placeholder="Enter Name"
+                        />
+                      </div>
                     </div>
                   </>
                 ) : (
@@ -562,6 +724,172 @@ function Cate_AngleIron(props) {
                   onClick={handleConfirmSale}
                 >
                   Confirm Sale
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Cart */}
+      {isCartModalOpen && (
+        <div
+          className="modal fade show mt-4"
+          onClick={closeCartModal}
+          style={{
+            display: "block",
+            position: "fixed",
+            top: "55%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1050,
+          }}
+        >
+          <div
+            className="modal-dialog"
+            role="document"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-content">
+              <div className="modal-header ">
+                <h5 className="modal-title">Add to Cart</h5>
+              </div>
+              <div className="modal-body">
+                <div className="text-center">
+                  <input
+                    type="number"
+                    value={quantity}
+                    onChange={handleQuantityChange}
+                    className="m-3 border-2 p-2"
+                    placeholder="Enter Quantity"
+                    min="1"
+                    required
+                  />
+                  {/* <input
+                    type="number"
+                    value={mass}
+                    onChange={handleMassChange}
+                    className="m-3 border-2 p-2"
+                    placeholder={`Weight (${unit})`}
+                    min="0"
+                    required
+                  /> */}
+                  <select
+                    value={unit}
+                    onChange={handleUnitChange}
+                    className="m-3 border-2 p-2"
+                  >
+                    <option value="kg">Kilograms</option>
+                    {/* <option value="g">Grams</option> */}
+                  </select>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={closeCartModal}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleAddToCart}
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cart viewing modal */}
+      {showCartModal && (
+        <div
+          className="modal fade show mt-4"
+          onClick={closeShowCartModal} // Function to close the modal
+          style={{
+            display: "block",
+            position: "fixed",
+            top: "55%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1050,
+          }}
+        >
+          <div
+            className="modal-dialog"
+            role="document"
+            onClick={(e) => e.stopPropagation()} // Prevent click on dialog from closing modal
+            style={{ maxWidth: "650px", width: "100%" }}
+          >
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Your Cart</h5>
+              </div>
+              <div className="modal-body">
+                {cartItems.length > 0 ? ( // Check if there are items in the cart
+                  <ul>
+                    {cartItems.map((item, index) => (
+                      <li
+                        key={index}
+                        style={{ display: "flex", alignItems: "center" }}
+                      >
+                        <span>
+                          Length: {item.length}, Width: {item.width}, Mass:{" "}
+                          {item.mass * item.quantity} KG, Quantity:{" "}
+                          {item.quantity}, Price: {item.price * item.quantity}
+                        </span>
+                        {/* Deselect icon */}
+                        <GrSubtractCircle
+                          className="text-danger h4"
+                          onClick={() => handleDeselectCartProduct(index)}
+                          style={{
+                            marginLeft: "10px",
+                            marginTop: "5px",
+                            color: "red",
+
+                            cursor: "pointer",
+                          }}
+                        />
+                      </li>
+                    ))}
+                    <div className="text-center mt-5">
+                      <input
+                        type="text"
+                        className="text-center p-1"
+                        value={phoneNumber} // Controlled input for phone number
+                        onChange={handlePhoneNumberChange} // Update phone number in state
+                        placeholder="Enter your phone number"
+                        style={{
+                          marginTop: "10px",
+                          width: "50%",
+                        }}
+                      />
+                    </div>
+                  </ul>
+                ) : (
+                  <p className="h4 text-center">Your cart is empty.</p> // Message when there are no items
+                )}
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={closeShowCartModal} // Close button
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleConfirmOrder} // Confirm order button
+                >
+                  Confirm Order
                 </button>
               </div>
             </div>

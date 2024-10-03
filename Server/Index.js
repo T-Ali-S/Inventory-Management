@@ -269,23 +269,25 @@ app.post("/add-product", async (req, res) => {
 });
 
 app.post("/addChannel", async (req, res) => {
-  const { product_id, length, width, weight, price } = req.body;
+  const { product_id, length, width, weight, mass, price } = req.body;
   const newChannel = new Channel({
     product_id,
     length,
     width,
     weight,
+    mass,
     price,
   });
   await newChannel.save();
   res.send("New Sub-Category for Channel Saved succesfully");
 });
 app.post("/addAngleIron", async (req, res) => {
-  const { product_id, length, width } = req.body;
+  const { product_id, length, width, mass } = req.body;
   const newAngleIron = new AngleIron({
     product_id,
     length,
     width,
+    mass,
   });
   await newAngleIron.save();
   res.send("New Sub-Category for AngleIron Saved succesfully");
@@ -315,11 +317,11 @@ app.post("/addAngleBar", async (req, res) => {
   }
 });
 app.post("/addPipes", async (req, res) => {
-  const { product_id, guage, width, length } = req.body;
+  const { product_id, guage, width, length, mass } = req.body;
 
   try {
     // Validate input fields
-    if (!product_id || !guage || !width || !length) {
+    if (!product_id || !guage || !width || !length || !mass) {
       return res.status(400).send("All fields are required");
     }
 
@@ -329,6 +331,7 @@ app.post("/addPipes", async (req, res) => {
       guage,
       width,
       length,
+      mass,
     });
 
     // Save the new AngleBar in the database
@@ -351,7 +354,7 @@ app.post("/deleteProducts", async (req, res) => {
 });
 
 app.post("/editPipes", async (req, res) => {
-  const { _id, length, width, guage, price } = req.body;
+  const { _id, length, width, guage, mass, price } = req.body;
   try {
     const pipes = await Pipes.findById(_id);
     if (!pipes) {
@@ -362,6 +365,7 @@ app.post("/editPipes", async (req, res) => {
     pipes.length = length || pipes.length;
     pipes.width = width || pipes.width;
     pipes.guage = guage || pipes.guage;
+    pipes.mass = mass || pipes.mass;
     pipes.price = price || pipes.price; // Corrected this line
 
     // Save the updated channel
@@ -372,7 +376,7 @@ app.post("/editPipes", async (req, res) => {
   }
 });
 app.post("/editChannel", async (req, res) => {
-  const { _id, length, width, guauge, price } = req.body;
+  const { _id, length, width, weight, mass, price } = req.body;
   try {
     const channel = await Channel.findById(_id);
     if (!channel) {
@@ -383,6 +387,7 @@ app.post("/editChannel", async (req, res) => {
     channel.length = length || channel.length;
     channel.width = width || channel.width;
     channel.weight = weight || channel.weight;
+    channel.mass = mass || channel.mass;
     channel.price = price || channel.price; // Corrected this line
 
     // Save the updated channel
@@ -394,7 +399,7 @@ app.post("/editChannel", async (req, res) => {
 });
 
 app.post("/editAngleIron", async (req, res) => {
-  const { _id, length, width, price } = req.body;
+  const { _id, length, width, mass, price } = req.body;
   try {
     const angleIron = await AngleIron.findById(_id);
     if (!angleIron) {
@@ -402,6 +407,7 @@ app.post("/editAngleIron", async (req, res) => {
     }
     angleIron.length = length || angleIron.length; // Update name if provided, otherwise keep the existing value
     angleIron.width = width || angleIron.width;
+    angleIron.mass = mass || angleIron.mass;
     angleIron.price = price || angleIron.price;
 
     await angleIron.save();
@@ -411,7 +417,7 @@ app.post("/editAngleIron", async (req, res) => {
   }
 });
 app.post("/editAngleBar", async (req, res) => {
-  const { _id, length, shape, price } = req.body;
+  const { _id, length, shape, mass, price } = req.body;
   try {
     const angleBar = await AngleBar.findById(_id);
     if (!angleBar) {
@@ -420,6 +426,7 @@ app.post("/editAngleBar", async (req, res) => {
 
     angleBar.length = length || angleBar.length;
     angleBar.shape = shape || angleBar.shape;
+    angleBar.mass = mass || angleBar.mass;
     angleBar.price = price || angleBar.price;
 
     await angleBar.save();
