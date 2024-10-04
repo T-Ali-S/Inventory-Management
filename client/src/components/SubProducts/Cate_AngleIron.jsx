@@ -168,6 +168,7 @@ function Cate_AngleIron(props) {
       length: product.length,
       width: product.width,
       quantity: product.selectedNumber,
+      mass: product.mass,
       price: product.selectedNumber * product.price, // Total price
       date: new Date().toISOString().split("T")[0], // Current date in YYYY-MM-DD format
       paymentType: selectedOption, // 'cash' or 'credit'

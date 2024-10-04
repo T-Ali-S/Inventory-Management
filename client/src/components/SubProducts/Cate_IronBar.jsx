@@ -180,6 +180,7 @@ function IronBarCategory(props) {
       length: product.length,
       shape: product.shape,
       quantity: product.selectedNumber,
+      mass: product.mass,
       price: product.selectedNumber * product.price, // Total price
       date: new Date().toISOString().split("T")[0], // Current date in YYYY-MM-DD format
       paymentType: selectedOption, // 'cash' or 'credit'
@@ -314,8 +315,9 @@ function IronBarCategory(props) {
         productName: "AngleBar",
         length: item.length,
         shape: item.shape,
-        mass: item.mass,
+
         price: item.price,
+        mass: item.mass,
         quantity: item.quantity,
         orderDate: new Date().toISOString(),
         customerName: props.username,

@@ -13,6 +13,7 @@ const AngleBar = require("./Models/Bar");
 const Pipes = require("./Models/Pipes");
 const Sale = require("./Models/Sales");
 const Orders = require("./Models/Order");
+const Inventorys = require("./Models/Inventory");
 
 app.get("/a", async (req, res) => {
   let users = await Users.find();
@@ -60,6 +61,17 @@ app.get("/getPipe", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+app.get("/getInventory", async (req, res) => {
+  try {
+    const inventory = await Inventorys.find();
+    res.status(200).json(inventory);
+  } catch (error) {
+    console.error("Error fetching channels:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 app.get("/getSales", async (req, res) => {
   try {
     const sales = await Sale.find();
@@ -375,6 +387,35 @@ app.post("/editPipes", async (req, res) => {
     return res.status(500).send({ error: error.message });
   }
 });
+
+app.post("/AddInventory", async (req, res) => {
+  const { mass } = req.body; // Extract the mass from the request body
+
+  try {
+    // Ensure mass is provided
+    if (!mass) {
+      return res.status(400).json({ msg: "Invalid data provided" });
+    }
+
+    // Delete all existing records in the Inventory collection
+    await Inventorys.deleteMany({});
+
+    // Create a new record with the entered mass
+    const newInventory = new Inventorys({
+      mass: mass,
+    });
+
+    await newInventory.save(); // Save the new inventory record
+    res.send({
+      status: "Ok",
+      data: "All previous data deleted, new inventory added",
+    });
+  } catch (error) {
+    console.error("Error occurred while handling inventory:", error);
+    return res.status(500).send({ error: "Server error occurred." });
+  }
+});
+
 app.post("/editChannel", async (req, res) => {
   const { _id, length, width, weight, mass, price } = req.body;
   try {
@@ -461,9 +502,9 @@ app.get("/getFilterSales", async (req, res) => {
 
     let match = {};
 
-    // Check if any date filter (year, month, day) is provided
     if (year || month || day) {
       let dateMatch = {};
+
       if (year) dateMatch.year = Number(year);
       if (month) dateMatch.month = new Date(`${month} 1`).getMonth() + 1; // Convert month name to month number
       if (day) dateMatch.day = Number(day);
@@ -480,26 +521,23 @@ app.get("/getFilterSales", async (req, res) => {
       };
     }
 
-    // Add product name filter if provided
     if (productName) {
       match.productName = productName;
     }
 
-    // Add payment type filter if provided
     if (paymentType) {
       match.paymentType = paymentType;
     }
 
-    // If no filters are provided, return all sales
     const sales =
       Object.keys(match).length === 0
-        ? await Sale.find({}) // No filter, return all sales
-        : await Sale.aggregate([{ $match: match }]); // Apply filters
+        ? await Sale.find({})
+        : await Sale.aggregate([{ $match: match }]);
 
     res.status(200).json(sales);
   } catch (error) {
     console.error("Error fetching sales:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ error: "Internal Server Error" }); // Return JSON format error
   }
 });
 

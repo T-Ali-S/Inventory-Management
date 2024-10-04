@@ -25,6 +25,8 @@ import AddPipes from "./components/AddSubProducts/AddPipes";
 import Sell from "./components/AdminSide/Sell";
 import Transaction from "./components/AdminSide/Transaction";
 import TrackOrder from "./components/common_file/TrackOrder";
+import AddInventory from "./components/AddSubProducts/AddInventory";
+import ShowInventory from "./components/AddSubProducts/ShowInventory";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -320,6 +322,26 @@ function App() {
           <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
           <Alert alert={alert} />
           <Transaction showAlert={showAlert} />
+        </>
+      ),
+    },
+    {
+      path: "/AddInventory",
+      element: (
+        <>
+          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+          <Alert alert={alert} />
+          <AddInventory showAlert={showAlert} />
+        </>
+      ),
+    },
+    {
+      path: "/ShowInventory",
+      element: (
+        <>
+          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+          <Alert alert={alert} />
+          <ShowInventory showAlert={showAlert} />
         </>
       ),
     },

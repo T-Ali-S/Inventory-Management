@@ -36,11 +36,24 @@ function Transaction() {
       const response = await fetch(
         `http://localhost:4000/getFilterSales?${query}`
       );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch sales data");
+      }
+
       const result = await response.json();
       console.log("Sales response:", result); // Log backend response
-      setSales(result);
+
+      // Check if the result is an array before setting state
+      if (Array.isArray(result)) {
+        setSales(result);
+      } else {
+        console.error("Unexpected response format: not an array");
+        setSales([]); // Set sales as an empty array if the response is invalid
+      }
     } catch (error) {
       console.error("Error while fetching Sales:", error);
+      setSales([]); // Set sales as an empty array in case of error
     }
   };
 
@@ -56,27 +69,25 @@ function Transaction() {
     }));
   };
 
-  // Check if each column should be displayed (not entirely empty)
-  // const hasWeight = sales.some(
-  //   (sale) => sale.weight && sale.weight.trim() !== ""
-  // );
-  // Check if each column should be displayed (not entirely empty)
-  const hasProductName = sales.some(
-    (sale) => sale.productName && sale.productName.trim() !== ""
-  );
-  const hasLength = sales.some(
-    (sale) => sale.length && sale.length.toString().trim() !== ""
-  );
-  const hasWidth = sales.some(
-    (sale) => sale.width && sale.width.toString().trim() !== ""
-  );
-  const hasWeight = sales.some(
-    (sale) => sale.weight && sale.weight.toString().trim() !== ""
-  );
-  const hasShape = sales.some((sale) => sale.shape && sale.shape.trim() !== "");
-  const hasGuage = sales.some(
-    (sale) => sale.guage && sale.guage.toString().trim() !== ""
-  );
+  // Safely check if sales is an array and apply conditional rendering for columns
+  const hasProductName =
+    Array.isArray(sales) &&
+    sales.some((sale) => sale.productName && sale.productName.trim() !== "");
+  const hasLength =
+    Array.isArray(sales) &&
+    sales.some((sale) => sale.length && sale.length.toString().trim() !== "");
+  const hasWidth =
+    Array.isArray(sales) &&
+    sales.some((sale) => sale.width && sale.width.toString().trim() !== "");
+  const hasWeight =
+    Array.isArray(sales) &&
+    sales.some((sale) => sale.weight && sale.weight.toString().trim() !== "");
+  const hasShape =
+    Array.isArray(sales) &&
+    sales.some((sale) => sale.shape && sale.shape.trim() !== "");
+  const hasGuage =
+    Array.isArray(sales) &&
+    sales.some((sale) => sale.guage && sale.guage.toString().trim() !== "");
 
   return (
     <>
@@ -163,7 +174,7 @@ function Transaction() {
 
         {/* Sales Table */}
         {sales.length > 0 ? (
-          <table className="table  table-hover border text-center">
+          <table className="table table-hover border text-center">
             <thead>
               <tr>
                 <th>Customer Name</th>
@@ -175,6 +186,7 @@ function Transaction() {
                 {hasGuage && <th>Guage</th>}
                 <th>Date</th>
                 <th>Price</th>
+                <th>Mass</th>
                 <th>Payment Type</th>
               </tr>
             </thead>
@@ -188,8 +200,15 @@ function Transaction() {
                   {hasWeight && <td>{sale.weight || "N/A"}</td>}
                   {hasShape && <td>{sale.shape || "N/A"}</td>}
                   {hasGuage && <td>{sale.guage || "N/A"}</td>}
-                  <td>{new Date(sale.date).toLocaleDateString()}</td>
+                  <td>
+                    {new Date(sale.date).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </td>
                   <td>{sale.price}</td>
+                  <td>{sale.mass}</td>
                   <td>{sale.paymentType}</td>
                 </tr>
               ))}

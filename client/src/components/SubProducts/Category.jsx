@@ -12,7 +12,7 @@ function Category(props) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
-  const [custName, setCustName] = useState("");
+  const [custName, setCustName] = useState("Walk In");
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const showSelectOption = location.state?.showSelectOption || false;
@@ -99,7 +99,7 @@ function Category(props) {
   const closeSellModal = () => {
     setIsSellModalOpen(false);
     setSelectedProducts([]);
-    setCustName([]);
+    // setCustName([]);
   };
 
   const inputChangeHandler = (e) => {
@@ -164,6 +164,7 @@ function Category(props) {
       length: product.length,
       width: product.width,
       weight: product.weight,
+      mass: product.mass,
       quantity: product.selectedNumber,
       price: product.selectedNumber * product.price, // Total price
       date: new Date().toISOString().split("T")[0], // Current date in YYYY-MM-DD format
