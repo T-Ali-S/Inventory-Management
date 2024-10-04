@@ -37,7 +37,7 @@ function ShowInventory() {
                   //   style={{ cursor: "pointer" }}
                   className=" text-center"
                 >
-                  <td>{inventory.mass}</td>
+                  <td>{inventory.mass} KG</td>
 
                   <td>
                     <Link to="/AddInventory">

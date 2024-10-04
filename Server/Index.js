@@ -389,29 +389,50 @@ app.post("/editPipes", async (req, res) => {
 });
 
 app.post("/AddInventory", async (req, res) => {
-  const { mass } = req.body; // Extract the mass from the request body
+  const { mass, operation } = req.body;
 
   try {
-    // Ensure mass is provided
-    if (!mass) {
-      return res.status(400).json({ msg: "Invalid data provided" });
+    // Check the operation type - either "subtract" or "new_entry"
+    if (operation === "subtract") {
+      // Find the inventory record
+      const inventory = await Inventorys.findOne(); // Assuming only one inventory record
+
+      if (!inventory) {
+        return res.status(404).json({ msg: "Inventory not found" });
+      }
+
+      // Convert mass to number and subtract from current inventory
+      const currentMass = parseFloat(inventory.mass);
+      const massToSubtract = parseFloat(mass);
+
+      if (currentMass < massToSubtract) {
+        return res.status(400).send({ msg: "Not enough mass in inventory" });
+      }
+
+      // Subtract the mass and save
+      inventory.mass = (currentMass - massToSubtract).toFixed(2);
+      await inventory.save();
+      return res.send({
+        status: "Ok",
+        data: "Inventory updated after subtraction",
+      });
     }
 
-    // Delete all existing records in the Inventory collection
-    await Inventorys.deleteMany({});
+    // If the operation is to add new inventory data
+    if (operation === "new_entry") {
+      // Delete all existing inventory records
+      await Inventorys.deleteMany({});
 
-    // Create a new record with the entered mass
-    const newInventory = new Inventorys({
-      mass: mass,
-    });
+      // Add new inventory data
+      const newInventory = new Inventorys({ mass });
+      await newInventory.save();
 
-    await newInventory.save(); // Save the new inventory record
-    res.send({
-      status: "Ok",
-      data: "All previous data deleted, new inventory added",
-    });
+      return res.send({ status: "Ok", data: "New inventory data added" });
+    }
+
+    return res.status(400).json({ msg: "Invalid operation" });
   } catch (error) {
-    console.error("Error occurred while handling inventory:", error);
+    console.error("Error occurred while processing inventory:", error);
     return res.status(500).send({ error: "Server error occurred." });
   }
 });

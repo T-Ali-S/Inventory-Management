@@ -171,13 +171,34 @@ function Category(props) {
       paymentType: selectedOption, // 'cash' or 'credit'
     }));
 
+    // Calculate the total mass of all sold products
+    const totalMassSold = selectedData.reduce((acc, product) => {
+      return acc + parseFloat(product.mass) * product.selectedNumber;
+    }, 0);
+
     try {
+      // Record sales data
       const response = await axios.post("http://localhost:4000/sales", {
         sales: salesData,
       });
 
       if (response.status === 200) {
         props.showAlert("Sales successfully recorded", "success");
+
+        // Subtract the total mass from the inventory
+        const inventoryUpdateResponse = await axios.post(
+          "http://localhost:4000/AddInventory",
+          {
+            mass: totalMassSold, // Send total mass to subtract
+            operation: "subtract", // We can indicate subtraction operation
+          }
+        );
+
+        if (inventoryUpdateResponse.data.status === "Ok") {
+          props.showAlert("Inventory successfully updated", "success");
+        } else {
+          props.showAlert("Error updating inventory", "danger");
+        }
 
         // Clear the local storage after successful data submission
         localStorage.removeItem("selectedChannelData");
@@ -191,10 +212,9 @@ function Category(props) {
     } catch (error) {
       console.error("Error while recording sales:", error);
       props.showAlert("Error while recording sales", "danger");
-
-      // If error, keep the data in local storage
     }
   };
+
   const handleDeselectProduct = (productIndex) => {
     // Remove product from selectedProducts array
     const updatedSelectedProducts = selectedProducts.filter(

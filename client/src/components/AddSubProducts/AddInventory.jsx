@@ -10,16 +10,14 @@ function Inventory(props) {
     e.preventDefault();
 
     try {
-      // Send data to the backend
+      // Send new inventory data
       const response = await axios.post("http://localhost:4000/AddInventory", {
         mass: inventory.mass,
+        operation: "new_entry", // Specify new entry operation
       });
 
       if (response.data.status === "Ok") {
-        props.showAlert(
-          "Inventory updated. All previous data deleted.",
-          "success"
-        );
+        props.showAlert("Inventory successfully updated", "success");
       } else {
         props.showAlert("Unexpected response from the server", "warning");
       }
