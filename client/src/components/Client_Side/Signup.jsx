@@ -1,25 +1,56 @@
 import { useState } from "react";
 import React from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Signup(props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [adminCheck, setAdminCheck] = useState("false");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
+
+  // Password validation function
+  const validatePassword = (pwd) => {
+    const hasNumber = /\d/; // regex to check if it contains a number
+    const hasAlphabet = /[a-zA-Z]/; // regex to check if it contains an alphabet
+    return pwd.length >= 8 && hasNumber.test(pwd) && hasAlphabet.test(pwd);
+  };
 
   const collectData = async (e) => {
     e.preventDefault();
 
+    // Validate password
+    if (!validatePassword(password)) {
+      setPasswordError(
+        "Password must be at least 8 characters long, contain at least one number and one letter"
+      );
+      return;
+    } else {
+      setPasswordError("");
+    }
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      props.showAlert("Passwords do not match", "warning");
+      setConfirmPassword("");
+      setPassword("");
+      return;
+    }
+
     const result = await axios.post("http://localhost:4000/check-email", {
       email,
     });
+
     if (result.data === "Email already exists") {
       props.showAlert("Email already exists", "warning");
       setEmail("");
       setPassword("");
+      setConfirmPassword("");
       setName("");
     } else if (result.data === "Email is available") {
       const signUpResponse = await axios.post("http://localhost:4000/signup", {
@@ -28,6 +59,7 @@ function Signup(props) {
         password,
         adminCheck,
       });
+
       if (signUpResponse.data === "Signup successful") {
         props.showAlert("SignUp successful", "success");
         navigate("/Login");
@@ -35,46 +67,145 @@ function Signup(props) {
         props.showAlert("Unexpected response from server", "warning");
       }
     } else {
-      props.showAlert("Unexpected response fromthe server", "warning");
+      props.showAlert("Unexpected response from the server", "warning");
     }
   };
 
   return (
     <>
-      <h2 className="text-center  pt-3 mb-5">Sign-up Form</h2>
-      <div className="text-center border-2 m-5">
+      <div
+        style={{
+          textAlign: "center",
+          border: "1px solid #e0e0e0",
+          padding: "20px",
+          borderRadius: "10px",
+          maxWidth: "400px",
+          margin: "200px auto",
+          boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+        }}
+      >
         <form onSubmit={collectData}>
-          <div className="mb-3 mt-5">
+          <div style={{ marginBottom: "20px", marginTop: "20px" }}>
+            <h2
+              style={{
+                textAlign: "center",
+                marginBottom: "30px",
+                fontWeight: "bold",
+              }}
+            >
+              Sign-up Form
+            </h2>
             <input
               type="text"
-              className="form-label border-2 border-gray-700 p-2"
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                boxSizing: "border-box",
+              }}
               value={name}
-              placeholder="UserName"
+              placeholder="Username"
               onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
-          <div className="mb-3">
+          <div style={{ marginBottom: "20px" }}>
             <input
               type="email"
-              className="form-label border-2 border-gray-700 p-2"
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                boxSizing: "border-box",
+              }}
               value={email}
               placeholder="Email Address"
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
-          <div className="mb-3">
+          <div style={{ marginBottom: "20px", position: "relative" }}>
             <input
-              type="password"
-              className="form-label border-2 border-gray-700 p-2"
+              type={showPassword ? "text" : "password"}
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                boxSizing: "border-box",
+              }}
               value={password}
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+              }}
+            >
+              {showPassword ? "🙈" : "👁️"}
+            </span>
           </div>
-          <button type="submit" className="mb-4 btn btn-success text-center">
+
+          {/* {passwordError && (
+            <p style={{ color: "red", fontSize: "12px", marginBottom: "10px" }}>
+              {passwordError}
+            </p>
+          )} */}
+          <div style={{ marginBottom: "20px", position: "relative" }}>
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                boxSizing: "border-box",
+              }}
+              value={confirmPassword}
+              placeholder="Confirm Password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            <span
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+              }}
+            >
+              {showConfirmPassword ? "🙈" : "👁️"}
+            </span>
+          </div>
+          {passwordError && (
+            <p style={{ color: "red", fontSize: "12px", marginBottom: "10px" }}>
+              {passwordError}
+            </p>
+          )}
+          <button
+            type="submit"
+            style={{
+              width: "100%",
+              padding: "10px",
+              background: "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontSize: "16px",
+            }}
+          >
             Submit
           </button>
         </form>

@@ -27,6 +27,7 @@ import Transaction from "./components/AdminSide/Transaction";
 import TrackOrder from "./components/common_file/TrackOrder";
 import AddInventory from "./components/AddSubProducts/AddInventory";
 import ShowInventory from "./components/AddSubProducts/ShowInventory";
+import SideMenu from "./components/AdminSide/SideMenu";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -62,6 +63,7 @@ function App() {
           {authCheck ? (
             <>
               <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+              <SideMenu isLoggedIn={isLoggedIn} username={username} />
               <Alert alert={alert} />
               <AdminHome showAlert={showAlert} />
             </>
@@ -98,6 +100,7 @@ function App() {
         </>
       ),
     },
+
     {
       path: "/Signup",
       element: (

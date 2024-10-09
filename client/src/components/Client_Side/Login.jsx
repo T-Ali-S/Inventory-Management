@@ -5,6 +5,7 @@ import axios from "axios";
 function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -14,8 +15,6 @@ function Login(props) {
       .then((result) => {
         if (result.data.success) {
           props.showAlert("Logged In", "success");
-          // setEmail("");
-          // setPassword("");
           props.setIsLoggedIn(true);
           props.setusername(result.data.username);
           localStorage.setItem("username", result.data.username);
@@ -26,52 +25,111 @@ function Login(props) {
           props.showAlert("Login Failed: " + result.data.message, "warning");
         }
       })
-      .catch((err) => console.log(err)); // Fixed typo here
+      .catch((err) => console.log(err));
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <div className="border-2 m-5 text-center">
-          <div className="mt-5">
-            <p className="h2">Login Form</p>
-          </div>
-          <div className="mt-5">
+      <form onSubmit={handleSubmit} style={{ textAlign: "center" }}>
+        <div
+          style={{
+            border: "1px solid #e0e0e0",
+            padding: "20px",
+            borderRadius: "10px",
+            maxWidth: "400px",
+            margin: "200px auto",
+            boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+          }}
+        >
+          <h2 style={{ margin: "20px 0", fontWeight: "bold" }}>Log In</h2>
+          <div style={{ marginBottom: "20px" }}>
             <input
-              type="email" // Changed to "email" for better validation
+              type="email"
               value={email}
-              placeholder="Enter Email Address"
+              placeholder="me@example.com"
               onChange={(e) => setEmail(e.target.value)}
-              className="border-2 text-center rounded-pill p-2"
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                boxSizing: "border-box",
+              }}
               required
             />
           </div>
-          <div className="mt-2">
+
+          <div style={{ marginBottom: "20px", position: "relative" }}>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"} // Toggle input type
               value={password}
-              placeholder="Enter Password"
+              placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
-              className="border-2 rounded-pill text-center p-2"
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                boxSizing: "border-box",
+              }}
               required
             />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+              }}
+            >
+              {showPassword ? "🙈" : "👁️"}
+            </span>
           </div>
-          <div className="mt-3">
-            <Link to="/Signup" className=" text-decoration-none">
+
+          <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+            <Link
+              to="/Signup"
+              style={{
+                textDecoration: "none",
+                color: "#6a11cb",
+                marginRight: "20px",
+              }}
+            >
               Create an Account
             </Link>
-          </div>
-          <div className="mt-3">
-            <Link to="/Adminlogin" className=" text-decoration-none">
+            <Link
+              to="/Adminlogin"
+              style={{ textDecoration: "none", color: "#6a11cb" }}
+            >
               Admin Login
             </Link>
           </div>
+
           <button
-            type="submit" // Ensure the button submits the form
-            className="btn btn-outline-success btn-lg text-center"
+            type="submit"
+            style={{
+              width: "100%",
+              padding: "10px",
+              background: "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontSize: "16px",
+            }}
           >
             Submit
           </button>
+          <div className="mt-2">
+            <Link
+              to="/Adminlogin"
+              style={{ textDecoration: "none", color: "#6a11cb" }}
+            >
+              Forgot Password
+            </Link>
+          </div>
         </div>
       </form>
     </>
