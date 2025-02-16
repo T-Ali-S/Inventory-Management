@@ -91,8 +91,17 @@ function Transaction() {
 
   return (
     <>
-      <div>
-        <div className="text-center h1 mt-5">Sales</div>
+      <div
+        style={{
+          marginTop: "65px",
+          marginBottom: "75px",
+          marginLeft: "30px",
+          marginRight: "30px",
+          backgroundColor: "#f5f5f5", // Set same color as body background
+          minHeight: "100vh", // Ensure it spans the full viewport height
+        }}
+      >
+        <div className="text-center h2 ">Sales</div>
 
         {/* Dropdown Filters */}
         <div className="row m-4 ">

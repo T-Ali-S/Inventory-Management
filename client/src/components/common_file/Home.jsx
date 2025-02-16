@@ -1,110 +1,95 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Home(props) {
-  const [products, setProducts] = useState([]);
-  const [channel, setChannel] = useState([]);
   const navigate = useNavigate();
 
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch("http://localhost:4000/getProduct");
-      const result = await response.json();
-      setProducts(result);
-    } catch (error) {
-      console.error("Error while fetching products:", error);
-    }
-  };
+  // Array of products with local image paths
+  const products = [
+    {
+      id: 1,
+      name: "Channels",
+      image: "/images/Channels.jpg", // Path relative to the `public` folder
+      route: "/Category",
+    },
+    {
+      id: 2,
+      name: "Angle Bar",
+      image: "/images/AngleBar.jpg",
+      route: "/Cate_IronBar",
+    },
+    {
+      id: 3,
+      name: "Pipes",
+      image: "/images/Pipes.jpg",
+      route: "/Cate_pipes",
+    },
+    {
+      id: 4,
+      name: "Angle Iron",
+      image: "/images/AngleIron.jpg",
+      route: "/Cate_AngleIron",
+    },
+  ];
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const handleRowClick = (index) => {
-    if (index === 0) {
-      if (props.isSellpage === true) {
-        navigate("/Category", {
-          state: { showSelectOption: true },
-        });
-      } else {
-        navigate("/Category");
-      }
-    } else if (index === 1) {
-      if (props.isSellpage === true) {
-        navigate("/Cate_IronBar", {
-          state: { showSelectOption: true },
-        });
-      } else {
-        navigate("/Cate_IronBar");
-      }
-    } else if (index === 3) {
-      if (props.isSellpage === true) {
-        navigate("/Cate_pipes", {
-          state: { showSelectOption: true },
-        });
-      } else {
-        navigate("/Cate_pipes");
-      }
-    } else if (index === 2) {
-      if (props.isSellpage === true) {
-        navigate("/Cate_AngleIron", {
-          state: { showSelectOption: true },
-        });
-      } else {
-        navigate("/Cate_AngleIron");
-      }
+  // Handle click to navigate to the respective route
+  const handleImageClick = (route) => {
+    if (props.isSellpage === true) {
+      navigate(route, { state: { showSelectOption: true } });
     } else {
-      navigate("/Login");
+      navigate(route);
     }
   };
+
   return (
-    <>
-      <div className="m-5">
-        <div className="h2 text-center m-5">Available Products</div>
-        {products.length > 0 ? (
-          <table className="table table-hover border text-center">
-            <thead>
-              <tr className="h5 text-center">
-                <th>Products</th>
-                <th>Types</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody className="">
-              {products.map((product, index) => (
-                <tr
-                  key={product._id}
-                  onClick={() => handleRowClick(index)}
-                  style={{ cursor: "pointer" }}
-                  className=" text-center"
-                >
-                  <td className="">{product.name}</td>
-                  <td>{product.types}</td>
-                  <td>
-                    <button type="button" className="hover:text-danger ">
-                      Detail
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "50vh",
-              fontSize: "1.5rem",
-              color: "gray",
-            }}
-          >
-            No Products to review
+    <div
+      style={{
+        marginTop: "65px",
+        marginBottom: "75px",
+        marginLeft: "30px",
+        marginRight: "30px",
+      }}
+    >
+      <div className="h2 text-center m-5">Available Products</div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)", // Two images per row
+          gap: "20px",
+          justifyContent: "center",
+        }}
+      >
+        {products.map((product) => (
+          <div key={product.id} style={{ textAlign: "center" }}>
+            <div
+              onClick={() => handleImageClick(product.route)}
+              style={{
+                backgroundImage: `url(${product.image})`, // Use local image
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                width: "600px",
+                height: "250px",
+                cursor: "pointer",
+                border: "1px solid #ddd",
+                borderRadius: "10px",
+                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+              }}
+              title={product.name}
+            ></div>
+            <div
+              style={{
+                marginTop: "10px",
+                fontWeight: "bold",
+                fontSize: "18px",
+                color: "#333",
+              }}
+            >
+              {product.name}
+            </div>
           </div>
-        )}
+        ))}
       </div>
-    </>
+    </div>
   );
 }
 

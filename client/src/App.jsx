@@ -42,7 +42,7 @@ function App() {
     });
     setTimeout(() => {
       setAlert(null);
-    }, 2500);
+    }, 3500);
   };
 
   useEffect(() => {
@@ -63,9 +63,9 @@ function App() {
           {authCheck ? (
             <>
               <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
-              <SideMenu isLoggedIn={isLoggedIn} username={username} />
-              <Alert alert={alert} />
-              <AdminHome showAlert={showAlert} />
+              <SideMenu isLoggedIn={isLoggedIn} username={username}>
+                <AdminHome showAlert={showAlert} />
+              </SideMenu>
             </>
           ) : (
             <>
@@ -77,12 +77,15 @@ function App() {
         </>
       ),
     },
+
     {
       path: "/About",
       element: (
         <>
           <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
-          <About />
+          <SideMenu isLoggedIn={isLoggedIn} username={username}>
+            <About />
+          </SideMenu>
         </>
       ),
     },
@@ -149,9 +152,11 @@ function App() {
       path: "/AddProduct",
       element: (
         <>
-          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
-          <Alert alert={alert} />
-          <AddProduct showAlert={showAlert} />
+          <AdminNavbar />
+          <SideMenu isLoggedIn={isLoggedIn} username={username}>
+            <Alert alert={alert} />
+            <AddProduct showAlert={showAlert} />
+          </SideMenu>
         </>
       ),
     },
@@ -160,16 +165,28 @@ function App() {
       element: (
         <>
           {authCheck ? (
-            <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+            <>
+              <AdminNavbar />
+              <SideMenu isLoggedIn={isLoggedIn} username={username}>
+                <Alert alert={alert} />
+                <TrackOrder
+                  showAlert={showAlert}
+                  isLoggedIn={isLoggedIn}
+                  username={username}
+                />
+              </SideMenu>
+            </>
           ) : (
-            <NavBar isLoggedIn={isLoggedIn} username={username} />
+            <>
+              <NavBar isLoggedIn={isLoggedIn} username={username} />
+              <Alert alert={alert} />
+              <TrackOrder
+                showAlert={showAlert}
+                isLoggedIn={isLoggedIn}
+                username={username}
+              />
+            </>
           )}
-          <Alert alert={alert} />
-          <TrackOrder
-            showAlert={showAlert}
-            isLoggedIn={isLoggedIn}
-            username={username}
-          />
         </>
       ),
     },
@@ -179,9 +196,11 @@ function App() {
         <>
           {authCheck ? (
             <>
-              <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
-              <Alert alert={alert} />
-              <AddChannel showAlert={showAlert} />
+              <AdminNavbar />
+              <SideMenu isLoggedIn={isLoggedIn} username={username}>
+                <Alert alert={alert} />
+                <AddChannel showAlert={showAlert} />
+              </SideMenu>
             </>
           ) : (
             <>
@@ -199,9 +218,11 @@ function App() {
       path: "/AddAngleiron",
       element: (
         <>
-          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
-          <Alert alert={alert} />
-          <AddAngleiron showAlert={showAlert} />
+          <AdminNavbar />
+          <SideMenu isLoggedIn={isLoggedIn} username={username}>
+            <Alert alert={alert} />
+            <AddAngleiron showAlert={showAlert} />
+          </SideMenu>
         </>
       ),
     },
@@ -209,9 +230,11 @@ function App() {
       path: "/AddAngleBar",
       element: (
         <>
-          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
-          <Alert alert={alert} />
-          <AddAngleBar showAlert={showAlert} />
+          <AdminNavbar />
+          <SideMenu isLoggedIn={isLoggedIn} username={username}>
+            <Alert alert={alert} />
+            <AddAngleBar showAlert={showAlert} />
+          </SideMenu>
         </>
       ),
     },
@@ -219,9 +242,11 @@ function App() {
       path: "/AddPipes",
       element: (
         <>
-          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
-          <Alert alert={alert} />
-          <AddPipes showAlert={showAlert} />
+          <AdminNavbar />
+          <SideMenu isLoggedIn={isLoggedIn} username={username}>
+            <Alert alert={alert} />
+            <AddPipes showAlert={showAlert} />
+          </SideMenu>
         </>
       ),
     },
@@ -230,16 +255,28 @@ function App() {
       element: (
         <>
           {authCheck ? (
-            <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+            <>
+              <AdminNavbar />
+              <SideMenu isLoggedIn={isLoggedIn} username={username}>
+                <Alert alert={alert} />
+                <Cate_AngleIron
+                  showAlert={showAlert}
+                  isLoggedIn={isLoggedIn}
+                  username={username}
+                />
+              </SideMenu>
+            </>
           ) : (
-            <NavBar isLoggedIn={isLoggedIn} username={username} />
+            <>
+              <NavBar isLoggedIn={isLoggedIn} username={username} />
+              <Alert alert={alert} />
+              <Cate_AngleIron
+                showAlert={showAlert}
+                isLoggedIn={isLoggedIn}
+                username={username}
+              />
+            </>
           )}
-          <Alert alert={alert} />
-          <Cate_AngleIron
-            showAlert={showAlert}
-            isLoggedIn={isLoggedIn}
-            username={username}
-          />
         </>
       ),
     },
@@ -248,17 +285,29 @@ function App() {
       element: (
         <>
           {authCheck ? (
-            <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+            <>
+              <AdminNavbar />
+              <SideMenu isLoggedIn={isLoggedIn} username={username}>
+                <Alert alert={alert} />
+                <Category
+                  showAlert={showAlert}
+                  isLoggedIn={isLoggedIn}
+                  username={username}
+                />
+              </SideMenu>
+            </>
           ) : (
-            <NavBar isLoggedIn={isLoggedIn} username={username} />
+            <>
+              <NavBar isLoggedIn={isLoggedIn} username={username} />
+              <Alert alert={alert} />
+              <Category
+                showAlert={showAlert}
+                isLoggedIn={isLoggedIn}
+                username={username}
+              />
+            </>
           )}
           {/* <NavBar isLoggedIn={isLoggedIn} username={username} /> */}
-          <Alert alert={alert} />
-          <Category
-            showAlert={showAlert}
-            isLoggedIn={isLoggedIn}
-            username={username}
-          />
         </>
       ),
     },
@@ -267,16 +316,28 @@ function App() {
       element: (
         <>
           {authCheck ? (
-            <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+            <>
+              <AdminNavbar />
+              <SideMenu isLoggedIn={isLoggedIn} username={username}>
+                <Alert alert={alert} />
+                <Cate_IronBar
+                  showAlert={showAlert}
+                  isLoggedIn={isLoggedIn}
+                  username={username}
+                />
+              </SideMenu>
+            </>
           ) : (
-            <NavBar isLoggedIn={isLoggedIn} username={username} />
+            <>
+              <NavBar isLoggedIn={isLoggedIn} username={username} />
+              <Alert alert={alert} />
+              <Cate_IronBar
+                showAlert={showAlert}
+                isLoggedIn={isLoggedIn}
+                username={username}
+              />
+            </>
           )}
-          <Alert alert={alert} />
-          <Cate_IronBar
-            showAlert={showAlert}
-            isLoggedIn={isLoggedIn}
-            username={username}
-          />
         </>
       ),
     },
@@ -285,16 +346,28 @@ function App() {
       element: (
         <>
           {authCheck ? (
-            <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
+            <>
+              <AdminNavbar />
+              <SideMenu isLoggedIn={isLoggedIn} username={username}>
+                <Alert alert={alert} />
+                <Cate_pipes
+                  showAlert={showAlert}
+                  isLoggedIn={isLoggedIn}
+                  username={username}
+                />
+              </SideMenu>
+            </>
           ) : (
-            <NavBar isLoggedIn={isLoggedIn} username={username} />
+            <>
+              <NavBar isLoggedIn={isLoggedIn} username={username} />
+              <Alert alert={alert} />
+              <Cate_pipes
+                showAlert={showAlert}
+                isLoggedIn={isLoggedIn}
+                username={username}
+              />
+            </>
           )}
-          <Alert alert={alert} />
-          <Cate_pipes
-            showAlert={showAlert}
-            isLoggedIn={isLoggedIn}
-            username={username}
-          />
         </>
       ),
     },
@@ -302,9 +375,11 @@ function App() {
       path: "/EditProduct",
       element: (
         <>
-          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
-          <Alert alert={alert} />
-          <EditProduct showAlert={showAlert} />
+          <AdminNavbar />
+          <SideMenu isLoggedIn={isLoggedIn} username={username}>
+            <Alert alert={alert} />
+            <EditProduct showAlert={showAlert} />
+          </SideMenu>
         </>
       ),
     },
@@ -312,9 +387,11 @@ function App() {
       path: "/Sell",
       element: (
         <>
-          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
-          <Alert alert={alert} />
-          <Sell showAlert={showAlert} />
+          <AdminNavbar />
+          <SideMenu isLoggedIn={isLoggedIn} username={username}>
+            <Alert alert={alert} />
+            <Sell showAlert={showAlert} />
+          </SideMenu>
         </>
       ),
     },
@@ -322,9 +399,11 @@ function App() {
       path: "/Transaction",
       element: (
         <>
-          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
-          <Alert alert={alert} />
-          <Transaction showAlert={showAlert} />
+          <AdminNavbar />
+          <SideMenu isLoggedIn={isLoggedIn} username={username}>
+            <Alert alert={alert} />
+            <Transaction showAlert={showAlert} />
+          </SideMenu>
         </>
       ),
     },
@@ -332,9 +411,11 @@ function App() {
       path: "/AddInventory",
       element: (
         <>
-          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
-          <Alert alert={alert} />
-          <AddInventory showAlert={showAlert} />
+          <AdminNavbar />
+          <SideMenu isLoggedIn={isLoggedIn} username={username}>
+            <Alert alert={alert} />
+            <AddInventory showAlert={showAlert} />
+          </SideMenu>
         </>
       ),
     },
@@ -342,9 +423,11 @@ function App() {
       path: "/ShowInventory",
       element: (
         <>
-          <AdminNavbar isLoggedIn={isLoggedIn} username={username} />
-          <Alert alert={alert} />
-          <ShowInventory showAlert={showAlert} />
+          <AdminNavbar />
+          <SideMenu isLoggedIn={isLoggedIn} username={username}>
+            <Alert alert={alert} />
+            <ShowInventory showAlert={showAlert} />
+          </SideMenu>
         </>
       ),
     },

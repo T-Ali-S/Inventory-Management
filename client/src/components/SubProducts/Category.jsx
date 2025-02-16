@@ -363,7 +363,14 @@ function Category(props) {
 
   return (
     <>
-      <div className="m-5">
+      <div
+        style={{
+          marginTop: "100px",
+          marginBottom: "75px",
+          marginLeft: "30px",
+          marginRight: "30px",
+        }}
+      >
         <p className="text-center h1">Channels</p>
         {loading ? (
           <div
@@ -464,6 +471,9 @@ function Category(props) {
                 type="button"
                 className="btn btn-outline-danger btn-lg text-center"
                 onClick={handleSellClick}
+                style={{
+                  marginBottom: "30px",
+                }}
               >
                 Sell
               </button>
@@ -472,6 +482,9 @@ function Category(props) {
                 type="button"
                 to="/AddChannel"
                 className="btn btn-outline-primary btn-lg text-center"
+                style={{
+                  marginBottom: "30px",
+                }}
               >
                 Add Category
               </Link>
@@ -483,6 +496,9 @@ function Category(props) {
               type="button"
               onClick={handleSeeCartClick}
               className="btn btn-outline-success btn-lg text-center"
+              style={{
+                marginBottom: "30px",
+              }}
             >
               See Cart <FaCartShopping className="ms-2" />
             </Link>

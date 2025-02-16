@@ -33,7 +33,7 @@ function AdminHome() {
   };
   return (
     <>
-      <div className="text-center h1 pt-3 border m-5 ">
+      {/* <div className="text-center h2 pt-3 border m-5 ">
         <div>Admin DashBoard</div>
 
         <Link
@@ -43,7 +43,7 @@ function AdminHome() {
         >
           Create an Admin Account
         </Link>
-      </div>
+      </div> */}
       <div>
         <Home />
       </div>

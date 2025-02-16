@@ -186,6 +186,11 @@ function IronBarCategory(props) {
       paymentType: selectedOption, // 'cash' or 'credit'
     }));
 
+    // Calculate the total mass of all sold products
+    const totalMassSold = selectedData.reduce((acc, product) => {
+      return acc + parseFloat(product.mass) * product.selectedNumber;
+    }, 0);
+
     try {
       const response = await axios.post("http://localhost:4000/sales", {
         sales: salesData,
@@ -193,6 +198,21 @@ function IronBarCategory(props) {
 
       if (response.status === 200) {
         props.showAlert("Sales successfully recorded", "success");
+
+        // Subtract the total mass from the inventory
+        const inventoryUpdateResponse = await axios.post(
+          "http://localhost:4000/AddInventory",
+          {
+            mass: totalMassSold, // Send total mass to subtract
+            operation: "subtract", // We can indicate subtraction operation
+          }
+        );
+
+        if (inventoryUpdateResponse.data.status === "Ok") {
+          props.showAlert("Inventory successfully updated", "success");
+        } else {
+          props.showAlert("Error updating inventory", "danger");
+        }
 
         // Clear the local storage after successful data submission
         localStorage.removeItem("selectedAngleBarData");
@@ -358,7 +378,14 @@ function IronBarCategory(props) {
 
   return (
     <>
-      <div className="m-5">
+      <div
+        style={{
+          marginTop: "100px",
+          marginBottom: "75px",
+          marginLeft: "30px",
+          marginRight: "30px",
+        }}
+      >
         <p className="text-center h1">Angle Bars</p>
         {angleBars.length > 0 ? (
           <table className="table table-hover border text-center">
@@ -441,6 +468,9 @@ function IronBarCategory(props) {
                 type="button"
                 className="btn btn-outline-danger btn-lg text-center"
                 onClick={handleSellClick}
+                style={{
+                  marginBottom: "50px",
+                }}
               >
                 Sell
               </button>
@@ -449,6 +479,9 @@ function IronBarCategory(props) {
                 type="button"
                 to="/AddAngleBar"
                 className="btn btn-outline-primary btn-lg text-center"
+                style={{
+                  marginBottom: "50px",
+                }}
               >
                 Add Category
               </Link>
@@ -460,6 +493,9 @@ function IronBarCategory(props) {
               type="button"
               onClick={handleSeeCartClick}
               className="btn btn-outline-success btn-lg text-center"
+              style={{
+                marginBottom: "50px",
+              }}
             >
               See Cart <FaCartShopping className="ms-2" />
             </Link>

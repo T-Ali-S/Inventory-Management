@@ -21,7 +21,7 @@ function Adminlogin(props) {
           localStorage.setItem("isLoggedIn", true);
           localStorage.setItem("AdminCheck", JSON.stringify(true));
 
-          navigate("/AdminHome");
+          navigate("/");
         } else {
           props.showAlert("Login Failed: " + result.data.message, "warning");
         }

@@ -18,8 +18,16 @@ function About() {
 
   return (
     <>
-      <div className="text-center h1 mt-5">
-        <p className="h1">Information About the Users Registered</p>
+      <div
+        className="text-center h2 "
+        style={{
+          marginTop: "65px",
+          marginBottom: "75px",
+          marginLeft: "30px",
+          marginRight: "30px",
+        }}
+      >
+        <p className="h2">Information About the Users Registered</p>
       </div>
       <div className="border-2 m-5">
         <div>

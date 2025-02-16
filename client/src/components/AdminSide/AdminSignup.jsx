@@ -58,7 +58,12 @@ function AdminSignup(props) {
 
       if (signUpResponse.data === "Signup successful") {
         props.showAlert("SignUp successful", "success");
-        navigate("/AdminHome");
+        //
+        navigate("/Login");
+        localStorage.removeItem("username");
+        localStorage.removeItem("isLoggedIn");
+        window.location.reload();
+        //
       } else {
         props.showAlert("Unexpected response from server", "warning");
       }

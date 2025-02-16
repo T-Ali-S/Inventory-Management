@@ -65,7 +65,7 @@ function AddAngleBar(props) {
                 <IoIosArrowBack className="h4 mt-1" type="button" />
               </Link>
             </div>
-            <div className="h3 col-auto">Add AngleBar</div> {/* Removed me-5 */}
+            <div className="h2 col-auto">Add AngleBar</div> {/* Removed me-5 */}
           </div>
         </div>
         <form onSubmit={collectData} className="">

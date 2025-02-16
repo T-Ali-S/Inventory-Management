@@ -37,7 +37,7 @@ function Inventory(props) {
                 <IoIosArrowBack className="h4 mt-1" type="button" />
               </Link>
             </div>
-            <div className="h3 col-auto">Add Inventory</div>
+            <div className="h2 col-auto">Add Inventory</div>
           </div>
         </div>
         <form onSubmit={submitForm}>

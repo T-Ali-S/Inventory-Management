@@ -159,6 +159,11 @@ function Cate_pipes(props) {
       paymentType: selectedOption, // 'cash' or 'credit'
     }));
 
+    // Calculate the total mass of all sold products
+    const totalMassSold = selectedData.reduce((acc, product) => {
+      return acc + parseFloat(product.mass) * product.selectedNumber;
+    }, 0);
+
     try {
       const response = await axios.post("http://localhost:4000/sales", {
         sales: salesData,
@@ -166,6 +171,21 @@ function Cate_pipes(props) {
 
       if (response.status === 200) {
         props.showAlert("Sales successfully recorded", "success");
+
+        // Subtract the total mass from the inventory
+        const inventoryUpdateResponse = await axios.post(
+          "http://localhost:4000/AddInventory",
+          {
+            mass: totalMassSold, // Send total mass to subtract
+            operation: "subtract", // We can indicate subtraction operation
+          }
+        );
+
+        if (inventoryUpdateResponse.data.status === "Ok") {
+          props.showAlert("Inventory successfully updated", "success");
+        } else {
+          props.showAlert("Error updating inventory", "danger");
+        }
 
         // Clear the local storage after successful data submission
         localStorage.removeItem("selectedPipesData");
@@ -333,7 +353,14 @@ function Cate_pipes(props) {
 
   return (
     <>
-      <div className="m-5">
+      <div
+        style={{
+          marginTop: "100px",
+          marginBottom: "75px",
+          marginLeft: "30px",
+          marginRight: "30px",
+        }}
+      >
         <p className="text-center h1 ">Pipes</p>
         {Pipes.length > 0 ? (
           <table className="table table-hover border text-center">
@@ -412,12 +439,20 @@ function Cate_pipes(props) {
         )}
         {/* Add the two buttons */}
         {authCheck ? (
-          <div className="d-grid gap-2 col-6 mx-auto">
+          <div
+            className="d-grid gap-2 col-6 mx-auto"
+            style={{
+              marginBottom: "75px",
+            }}
+          >
             {showSelectOption ? (
               <button
                 type="button"
                 className="btn btn-outline-danger btn-lg text-center"
                 onClick={handleSellClick}
+                style={{
+                  marginBottom: "30px",
+                }}
               >
                 Sell
               </button>
@@ -426,6 +461,9 @@ function Cate_pipes(props) {
                 type="button"
                 to="/AddPipes"
                 className="btn btn-outline-primary btn-lg text-center"
+                style={{
+                  marginBottom: "30px",
+                }}
               >
                 Add Category
               </Link>
@@ -437,6 +475,9 @@ function Cate_pipes(props) {
               type="button"
               onClick={handleSeeCartClick}
               className="btn btn-outline-success btn-lg text-center"
+              style={{
+                marginBottom: "30px",
+              }}
             >
               See Cart <FaCartShopping className="ms-2" />
             </Link>

@@ -36,7 +36,7 @@ function AddProduct(props) {
   return (
     <>
       <div className=" text-center border-2 m-5">
-        <p className="h3 m-3">Add Products</p>
+        <p className="h2 m-3">Add Products</p>
         <form onSubmit={collectData}>
           <div className="mb-3 mt-5">
             <input

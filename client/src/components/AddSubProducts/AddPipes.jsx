@@ -68,7 +68,7 @@ function AddPipes(props) {
                 <IoIosArrowBack className="h4 mt-1" type="button" />
               </Link>
             </div>
-            <div className="h3 col-auto">Add AngleIron</div>{" "}
+            <div className="h2 col-auto">Add AngleIron</div>{" "}
             {/* Removed me-5 */}
           </div>
         </div>

@@ -46,7 +46,7 @@ function Login(props) {
             <input
               type="email"
               value={email}
-              placeholder="me@example.com"
+              placeholder="Enter Email Address"
               onChange={(e) => setEmail(e.target.value)}
               style={{
                 width: "100%",

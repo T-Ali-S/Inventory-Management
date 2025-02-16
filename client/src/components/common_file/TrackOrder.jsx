@@ -52,9 +52,11 @@ const TrackOrder = ({ username }) => {
       .then(() => {
         // Remove the deleted order from the state
         setOrderData(orderData.filter((order) => order._id !== orderId));
+        props.showAlert("Order has been deleted", "warning");
       })
       .catch((error) => {
         console.error("Failed to delete order", error);
+        props.showAlert("Error while deleting Order", "danger");
       });
   };
 

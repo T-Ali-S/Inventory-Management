@@ -16,7 +16,14 @@ function NavBar(props) {
   };
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+      <nav
+        className="navbar fixed-top navbar-expand-lg bg-body-tertiary"
+        style={{
+          padding: "2px 10px", // Decrease the padding
+          minHeight: "45px", // Decrease the height
+          zIndex: "1000",
+        }}
+      >
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
             Steel House
@@ -73,7 +80,13 @@ function NavBar(props) {
                   </ul>
                 </div>
               ) : (
-                <Link className="btn btn-outline-success" to="/Login">
+                <Link
+                  className="btn btn-outline-success"
+                  to="/Login"
+                  style={{
+                    margin: "4px 0",
+                  }}
+                >
                   Login
                 </Link>
               )}

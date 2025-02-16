@@ -16,3 +16,17 @@
   .btn {
     margin-top: 20px;
   }
+  html, body {
+    background-color: #f5f5f5; /* Replace this with your desired color */
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Ensures the background spans the full height */
+  }
+  
+  #root {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f5; /* Match this to the body background */
+  }
+  
